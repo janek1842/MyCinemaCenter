@@ -1,35 +1,73 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render
-from .models import Post
-
-posts = [
-    {
-        'author': 'CoreyMS',
-        'title': 'Władca Pierścieni - Dwie Wieże',
-        'content': 'Drużyna Pierścienia zostaje rozbita, lecz zdesperowany Frodo za wszelką cenę chce wypełnić powierzone mu zadanie. Aragorn z towarzyszami przygotowuje się, by odeprzeć atak hord Sarumana.',
-        'date_posted': 'August 27, 2021'
-    },
-
-    {
-        'author': 'JaneyMS',
-        'title': 'Hobbit - Pustkowie Smauga',
-        'content': 'Hobbit Bilbo Baggins razem z Gandalfem oraz trzynastoma krasnoludami zmierza do legowiska smoka Smauga. Bohaterowie chcą pokonać bestię i odebrać jej złoto, które ukradła.',
-        'date_posted': 'August 28, 2021'
-    },
-
-]
+from .models import News
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.urls import reverse
 
 
 # Create your views here.
 
 def home(request):
     context = {
-        'posts': Post.objects.all()
+        'posts': News.objects.all()
     }
 
     return render(request, 'jinja2/home.html', context)
 
 
 def about(request):
-    return render(request, 'jinja2/about.html',{'title': 'Mytitle'})
+    return render(request, 'jinja2/about.html', {'title': 'Mytitle'})
+
+
+class PostListView(ListView):
+    model = News
+    template_name = 'jinja2/home.html'
+    context_object_name = 'posts'
+    ordering = ['-date_posted']
+
+
+class PostDetailView(DetailView):
+    model = News
+
+
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = News
+    fields = ['title', 'short_description', 'main_description', 'category']
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = News
+    fields = ['title', 'short_description', 'main_description', 'category']
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
+
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = News
+
+    success_url = '/'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
+
