@@ -14,16 +14,16 @@ def home(request):
         'posts': News.objects.all()
     }
 
-    return render(request, 'jinja2/home.html', context)
+    return render(request, 'mycinema/home.html', context)
 
 
 def about(request):
-    return render(request, 'jinja2/about.html', {'title': 'Mytitle'})
+    return render(request, 'mycinema/about.html', {'title': 'Mytitle'})
 
 
 class PostListView(ListView):
     model = News
-    template_name = 'jinja2/home.html'
+    template_name = 'mycinema/home.html'
     context_object_name = 'posts'
     ordering = ['-date_posted']
 
