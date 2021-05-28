@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render
-from .models import News
+from .models import *
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse
 
@@ -30,6 +30,22 @@ class PostListView(ListView):
 
 class PostDetailView(DetailView):
     model = News
+
+    def form_valid(self, form):
+        form.instance.authorek = self.request.user
+        form.instance.post_id = self.kwargs['pk']
+        return super().form_valid(form)
+
+
+class OpinionCreateView(CreateView):
+    model = Opinions
+    template_name = 'mycinema/add_opinion.html'
+    fields = ['opinion', 'rating']
+
+    def form_valid(self, form):
+        form.instance.authorek = self.request.user
+        form.instance.post_id = self.kwargs['pk']
+        return super().form_valid(form)
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -70,4 +86,3 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == post.author:
             return True
         return False
-

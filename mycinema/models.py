@@ -47,29 +47,6 @@ class News(CommonInfo):
         return reverse('news-detail', kwargs={'pk': self.pk})
 
 
-class Opinions(models.Model):
-    RATINGS = (
-        (1, 1),
-        (2, 2),
-        (3, 3),
-        (4, 4),
-        (5, 5)
-    )
-
-    author_id = models.IntegerField()
-    # --------------------------------------------------
-    # != 0 means id of etc. Film table
-    film_id = models.IntegerField(default=0)
-    news_id = models.IntegerField(default=0)
-    staff_id = models.IntegerField(default=0)
-    cinema_id = models.IntegerField(default=0)
-    # --------------------------------------------------
-    opinion = models.TextField(blank=True)
-    rating = models.IntegerField(choices=RATINGS)
-    date_posted = models.DateTimeField(default=timezone.now)
-
-    def __str__(self):
-        return self.id
 
 
 class Film(CommonInfo):
@@ -118,3 +95,37 @@ class Cinema(CommonInfo):
 
     def __str__(self):
         return self.name
+
+
+class Opinions(models.Model):
+    RATINGS = (
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),
+        (5, 5)
+    )
+    authorek = models.ForeignKey(User, on_delete=models.CASCADE)
+    # author_id = models.IntegerField(default=0)
+    # --------------------------------------------------
+    # != 0 means id of etc. Film table
+    # film_id = models.IntegerField(default=0)
+    # news_id = models.IntegerField(default=0)
+    # staff_id = models.IntegerField(default=0)
+    # cinema_id = models.IntegerField(default=0)
+    # --------------------------------------------------
+
+    opinion = models.TextField(blank=True)
+    post = models.ForeignKey(News, related_name="opinionss", on_delete=models.CASCADE)
+    # film = models.ForeignKey(Film, related_name="filmss", on_delete=models.CASCADE)
+    # staff = models.ForeignKey(Staff, related_name="staffs", on_delete=models.CASCADE)
+    # cinema = models.ForeignKey(Cinema, related_name="opinionss", on_delete=models.CASCADE)
+
+    rating = models.IntegerField(choices=RATINGS)
+    date_posted = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.opinion
+
+    def get_absolute_url(self):
+        return reverse('mycinema-home')
