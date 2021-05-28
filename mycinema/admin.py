@@ -6,4 +6,3 @@ from .models import News, Opinions
 
 admin.site.register(News)
 admin.site.register(Opinions)
-

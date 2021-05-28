@@ -5,8 +5,28 @@ from django.urls import reverse
 
 
 # Create your models here.
+class CommonInfo(models.Model):
+    class Meta:
+        abstract = True
 
-class News(models.Model):
+    short_description = models.CharField(max_length=100, default="")
+    main_description = models.TextField(blank=True)
+    total_rating = models.IntegerField(default=0)
+    is_accepted = models.BooleanField(default=False)
+    author = models.ForeignKey(User, on_delete=models.RESTRICT)
+    moderator = models.CharField(max_length=50, default="")
+    opinion_counter = models.IntegerField(default=0)
+
+    def handle_rating(self, new_rating):
+        total = self.opinion_counter * self.total_rating
+        self.opinion_counter += 1
+        self.total_rating = (total + new_rating) / self.opinion_counter
+
+    def __str__(self):
+        return self.id
+
+
+class News(CommonInfo):
     CATEGORY = (
         ('MOVIE', 'MOVIE'),
         ('TVSERIES', 'TVSERIES'),
@@ -17,13 +37,8 @@ class News(models.Model):
     )
 
     title = models.CharField(max_length=100)
-    # tagi ? kogo lub czego dotyczy dany news
     category = models.CharField(max_length=50, null=True, choices=CATEGORY)
-    # kategoria której dotyczy news-> film,serial,kino,reżyserzy etc.
     date_posted = models.DateTimeField(default=timezone.now)
-    short_description = models.CharField(max_length=100)
-    main_description = models.TextField(blank=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
@@ -33,24 +48,73 @@ class News(models.Model):
 
 
 class Opinions(models.Model):
-    author_id = models.IntegerField()
-    # --------------------------------------------------
-    # != 0 point an id from model
-    films_id = models.IntegerField(default=0)
-    news_id = models.IntegerField(default=0)
-    staff_id = models.IntegerField(default=0)
-    cinemas_id = models.IntegerField(default=0)
-    # --------------------------------------------------
-    opinion = models.TextField(blank=True)
-    ratings = (
+    RATINGS = (
         (1, 1),
         (2, 2),
         (3, 3),
         (4, 4),
         (5, 5)
     )
-    rating = models.IntegerField(choices=ratings)
+
+    author_id = models.IntegerField()
+    # --------------------------------------------------
+    # != 0 means id of etc. Film table
+    film_id = models.IntegerField(default=0)
+    news_id = models.IntegerField(default=0)
+    staff_id = models.IntegerField(default=0)
+    cinema_id = models.IntegerField(default=0)
+    # --------------------------------------------------
+    opinion = models.TextField(blank=True)
+    rating = models.IntegerField(choices=RATINGS)
     date_posted = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.id
+
+
+class Film(CommonInfo):
+    GENRES = (
+        ('Action', 'Action'),
+        ('Adventure', 'Adventure'),
+        ('Comedy', 'Comedy'),
+        ('Crime', 'Crime'),
+        ('Fantasy', 'Fantasy'),
+        ('Historical', 'Historical'),
+        ('Horror', 'Horror'),
+        ('Musical', 'Musical'),
+        ('Romance', 'Romance'),
+        ('Science Fiction', 'Science Fiction'),
+        ('Thriller', 'Thriller'),
+        ('Western', 'Western'),
+    )
+    title = models.CharField(max_length=100)
+    genre = models.CharField(max_length=50, null=True, choices=GENRES)
+
+    def __str__(self):
+        return self.title
+
+
+class Staff(CommonInfo):
+    PROFESSIONS = (
+        ('Actor', 'Actor'),
+        ('Director', 'Director'),
+        ('Producer', 'Producer'),
+        ('Director of Photography', 'Director of Photography'),
+        ('Costume Designer', 'Costume Designer'),
+        ('Movie Editor', 'Movie Editor'),
+        ('Composer', 'Composer')
+    )
+    name = models.CharField(max_length=100)
+    profession = models.CharField(max_length=50, null=True, choices=PROFESSIONS)
+    related_films = models.ManyToManyField(Film)
+
+    def __str__(self):
+        return self.name
+
+
+class Cinema(CommonInfo):
+    name = models.CharField(max_length=100)
+    repertoire = models.ManyToManyField(Film)
+
+    def __str__(self):
+        return self.name
