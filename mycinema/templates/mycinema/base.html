@@ -38,7 +38,7 @@
                     <a class="nav-item nav-link" href="{% url 'mycinema-about' %}">Filmy</a>
                     <a class="nav-item nav-link" href="{% url 'mycinema-about' %}">Seriale</a>
                     <a class="nav-item nav-link" href="{% url 'mycinema-about' %}">Postacie</a>
-                    <a class="nav-item nav-link" href="{% url 'mycinema-about' %}">Kina</a>
+                    <a class="nav-item nav-link" href="{% url 'cinemas' %}">Kina</a>
                     <a class="nav-item nav-link" href="#">Rankingi</a>
                 </div>
                 <!-- Navbar Right Side -->
@@ -81,7 +81,16 @@
             </ul>
             </p>
             </div>
-            {% endif %}
+            <div class="content-section">
+                <h3>Add a cinemas !</h3>
+                <p class='text-muted'>Do you know some cinemas? Post it here :)</p>
+                <ul class="list-group">
+                    <a class="list-group-item list-group-item" href="{% url 'cinema-create' %}">New Cinema</a>
+                </ul>
+            </div>
+        {% endif %}
+
+
 
             <div class="content-section">
 

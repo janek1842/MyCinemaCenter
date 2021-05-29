@@ -17,6 +17,14 @@ def home(request):
     return render(request, 'mycinema/home.html', context)
 
 
+def cinemas(request):
+    context = {
+        'cinemas': Cinema.objects.all()
+    }
+
+    return render(request, 'mycinema/cinemas.html', context)
+
+
 def about(request):
     return render(request, 'mycinema/about.html', {'title': 'Mytitle'})
 
@@ -86,3 +94,16 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == post.author:
             return True
         return False
+
+
+class CinemaCreateView(LoginRequiredMixin, CreateView):
+    model = Cinema
+    fields = ['name', 'short_description', 'main_description']
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class CinemaDetailView(DetailView):
+    model = Cinema

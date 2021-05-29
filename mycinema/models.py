@@ -14,7 +14,7 @@ class CommonInfo(models.Model):
     total_rating = models.IntegerField(default=0)
     is_accepted = models.BooleanField(default=False)
     author = models.ForeignKey(User, on_delete=models.RESTRICT)
-    moderator = models.CharField(max_length=50, default="")
+    moderator = models.CharField(max_length=50, default="-")
     opinion_counter = models.IntegerField(default=0)
 
     def handle_rating(self, new_rating):
@@ -91,11 +91,13 @@ class Staff(CommonInfo):
 
 class Cinema(CommonInfo):
     name = models.CharField(max_length=100)
-    repertoire = models.ManyToManyField(Film)
+    #repertoire = models.ManyToManyField(Film)
 
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('cinema-detail', kwargs={'pk': self.pk})
 
 class Opinions(models.Model):
     RATINGS = (
@@ -106,20 +108,12 @@ class Opinions(models.Model):
         (5, 5)
     )
     authorek = models.ForeignKey(User, on_delete=models.CASCADE)
-    # author_id = models.IntegerField(default=0)
-    # --------------------------------------------------
-    # != 0 means id of etc. Film table
-    # film_id = models.IntegerField(default=0)
-    # news_id = models.IntegerField(default=0)
-    # staff_id = models.IntegerField(default=0)
-    # cinema_id = models.IntegerField(default=0)
-    # --------------------------------------------------
 
     opinion = models.TextField(blank=True)
     post = models.ForeignKey(News, related_name="opinionss", on_delete=models.CASCADE)
-    # film = models.ForeignKey(Film, related_name="filmss", on_delete=models.CASCADE)
-    # staff = models.ForeignKey(Staff, related_name="staffs", on_delete=models.CASCADE)
-    # cinema = models.ForeignKey(Cinema, related_name="opinionss", on_delete=models.CASCADE)
+    #film = models.ForeignKey(Film, related_name="filmss", on_delete=models.CASCADE)
+    #staff = models.ForeignKey(Staff, related_name="staffs", on_delete=models.CASCADE)
+    #cinema = models.ForeignKey(Cinema, related_name="opinionss", on_delete=models.CASCADE)
 
     rating = models.IntegerField(choices=RATINGS)
     date_posted = models.DateTimeField(default=timezone.now)

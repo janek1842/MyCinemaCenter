@@ -1,0 +1,27 @@
+{% extends "mycinema/base.html" %}
+
+{% block content %}
+{% for cinema in cinemas %}
+    <div class="card text-center">
+        <div class="card-header">
+            <ul class="nav nav-pills card-header-pills">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Info</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ cinema.name }}</h5>
+            <p class="card-text"></p>
+            <a href="{% url 'cinema-detail' cinema.id %}" class="btn btn-primary">Details</a>
+        </div>
+    </div>
+
+{% endfor %}
+{% endblock content %}
