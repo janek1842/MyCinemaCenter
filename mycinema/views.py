@@ -18,8 +18,26 @@ def home(request):
 
 
 def cinemas(request):
+    length = Cinema.objects.count()
+    if length % 2 == 0:
+        length /= 2
+    else:
+        length = (length + 1) / 2
+
+    a = []
+    b = []
+    cinemas_list = Cinema.objects.all()
+    for i in range(len(cinemas_list)):
+        if i % 2 == 0:
+            a.append(cinemas_list[i])
+        else:
+            b.append(cinemas_list[i])
+    if len(a) > len(b):
+        b.append(None)
+
     context = {
-        'cinemas': Cinema.objects.all()
+        'cinemas': zip(a, b),
+        'half_length': length
     }
 
     return render(request, 'mycinema/cinemas.html', context)
@@ -98,12 +116,46 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 class CinemaCreateView(LoginRequiredMixin, CreateView):
     model = Cinema
-    fields = ['name', 'short_description', 'main_description']
+    fields = ['name', 'localization', 'opening_hours', 'main_description', 'image']
 
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
+    def get_initial(self, *args, **kwargs):
+        initial = super(CinemaCreateView, self).get_initial(**kwargs)
+        initial['localization'] = ''
+        return initial
 
 class CinemaDetailView(DetailView):
     model = Cinema
+
+class CinemaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Cinema
+    fields = CinemaCreateView.fields
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
+
+
+class CinemaDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Cinema
+
+    success_url = '/cinemas'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False

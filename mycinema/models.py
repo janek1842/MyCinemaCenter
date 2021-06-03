@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django_resized import ResizedImageField
 
 
 # Create your models here.
@@ -91,6 +92,10 @@ class Staff(CommonInfo):
 
 class Cinema(CommonInfo):
     name = models.CharField(max_length=100)
+    image = ResizedImageField(size=[256, 256], crop=['middle', 'center'],
+                              quality=90, upload_to='cinema/', default='cinema/cinema_default.png')
+    localization = models.CharField(max_length=60, default='Unknown')
+    opening_hours = models.TextField(blank=True)
     #repertoire = models.ManyToManyField(Film)
 
     def __str__(self):

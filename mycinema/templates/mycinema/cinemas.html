@@ -1,27 +1,108 @@
 {% extends "mycinema/base.html" %}
-
+{% load extra_tags %}
+{% load static %}
 {% block content %}
-{% for cinema in cinemas %}
-    <div class="card text-center">
-        <div class="card-header">
-            <ul class="nav nav-pills card-header-pills">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">Info</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                </li>
-            </ul>
+
+{% for cinema1, cinema2 in cinemas %}
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card text-center">
+                <div class="card-header">
+                    <a class="hide-link-effects" href="{% url 'cinema-detail' cinema1.id %}"><h3><strong>{{ cinema1.name }}</strong></h3></a>
+                    </br>
+                    <div class="d-flex">
+                        <ul class="nav nav-pills card-header-pills list-inline mx-auto justify-content-center">
+                            <li class="nav-item list-inline-item">
+                                <button class="nav-link btn btn-outline-dark btn-sm" id="main-btn-{{ forloop.counter }}">Main</button>
+                            </li>
+                            <li class="nav-item list-inline-item">
+                                <button class="nav-link btn btn-outline-dark btn-sm" id="opening-hours-{{ forloop.counter }}">Opening hours</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <a href="{% url 'cinema-detail' cinema1.id %}" class="hide-link-effects">
+                    <div class="card-body more-details" >
+                        <img class="card-img-bottom" id="img-{{ forloop.counter }}" src="{{ cinema1.image.url }}" alt="Card image cap">
+                    </div>
+                </a>
+                <div class="card-footer">
+                    {{ cinema1.localization }}
+                </div>
+
+            </div>
+
         </div>
-        <div class="card-body">
-            <h5 class="card-title">{{ cinema.name }}</h5>
-            <p class="card-text"></p>
-            <a href="{% url 'cinema-detail' cinema.id %}" class="btn btn-primary">Details</a>
+        <div class="col-md-6">
+
+            {% if cinema2 is not None %}
+              <div class="card text-center">
+                    <div class="card-header">
+                        <a href="{% url 'cinema-detail' cinema2.id %}" class="hide-link-effects"><h3><strong>{{ cinema2.name }}</strong></h3></a>
+                        </br>
+                        <div class="d-flex">
+                            <ul class="nav nav-pills card-header-pills list-inline mx-auto justify-content-center">
+                                <li class="nav-item list-inline-item">
+                                    <button class="nav-link btn btn-outline-dark btn-sm" id="main-btn-{{ forloop.counter }}-2">Main</button>
+                                </li>
+                                <li class="nav-item list-inline-item">
+                                    <button class="nav-link btn btn-outline-dark btn-sm" id="opening-hours-{{ forloop.counter }}-2">Opening hours</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                  <a href="{% url 'cinema-detail' cinema2.id %}" class="hide-link-effects">
+                    <div class="card-body more-details" >
+                        <img class="card-img-bottom" id="img-{{ forloop.counter }}-2" src="{{ cinema2.image.url }}" alt="Card image cap">
+                    </div>
+                  </a>
+                <div class="card-footer">
+                    {{ cinema2.localization }}
+                </div>
+            </div>
+
+            {% endif %}
+
         </div>
     </div>
+    </br>
 
+    <script>
+        $("button#opening-hours-{{ forloop.counter }}").click(function (){
+            let div= $("img#img-{{ forloop.counter }}").hide().parent();
+
+            if(div.children().length <= 1) {
+                div.append("<p>{{ cinema1.opening_hours|linebreaksbr }}</p>");
+            } else {
+                div.children("p").show();
+            }
+        });
+
+         $("button#opening-hours-{{ forloop.counter }}-2").click(function (){
+            let div= $("img#img-{{ forloop.counter }}-2").hide().parent();
+
+            if(div.children().length <= 1) {
+                div.append("<p>{{ cinema2.opening_hours|linebreaksbr }}</p>");
+            } else {
+                div.children("p").show();
+            }
+        });
+
+
+        $("button#main-btn-{{ forloop.counter }}").click(function (){
+            let div= $("img#img-{{ forloop.counter }}").parent();
+            div.children().hide();
+            $("img#img-{{ forloop.counter }}").show();
+        });
+
+        $("button#main-btn-{{ forloop.counter }}-2").click(function (){
+            let div= $("img#img-{{ forloop.counter }}-2").parent();
+            div.children().hide();
+            $("img#img-{{ forloop.counter }}-2").show();
+        });
+    </script>
 {% endfor %}
+
 {% endblock content %}
