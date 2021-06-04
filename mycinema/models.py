@@ -1,3 +1,5 @@
+from itertools import count
+
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -12,7 +14,7 @@ class CommonInfo(models.Model):
 
     short_description = models.CharField(max_length=100, default="")
     main_description = models.TextField(blank=True)
-    total_rating = models.IntegerField(default=0)
+    total_rating = models.FloatField(default=0)
     is_accepted = models.BooleanField(default=False)
     author = models.ForeignKey(User, on_delete=models.RESTRICT)
     moderator = models.CharField(max_length=50, default="-")
@@ -46,6 +48,20 @@ class News(CommonInfo):
 
     def get_absolute_url(self):
         return reverse('news-detail', kwargs={'pk': self.pk})
+
+    def get_total_rate(self):
+
+        self.total_rating = 0
+
+        iteratore = 0
+
+        for op in self.opinionss.all():
+            self.total_rating = self.total_rating + op.rating
+            iteratore = iteratore + 1
+        if iteratore != 0:
+            return self.total_rating / iteratore
+        else:
+            return 0
 
 
 class Film(CommonInfo):
@@ -102,6 +118,17 @@ class Cinema(CommonInfo):
 
     def get_absolute_url(self):
         return reverse('cinema-detail', kwargs={'pk': self.pk})
+
+    def get_total_rate(self):
+        self.total_rating = 0
+        iteratore = 0
+        for op in self.filmopinions.all():
+            self.total_rating = self.total_rating + op.rating
+            iteratore = iteratore + 1
+        if iteratore != 0:
+            return self.total_rating / iteratore
+        else:
+            return 0
 
 
 class Opinions(models.Model):
