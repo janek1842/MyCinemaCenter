@@ -172,3 +172,76 @@ class CinemaDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == post.author:
             return True
         return False
+
+class FilmCreateView(LoginRequiredMixin, CreateView):
+    model = Film
+    fields = ['title', 'genre', 'short_description', 'main_description', 'image']
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def get_initial(self, *args, **kwargs):
+        initial = super(FilmCreateView, self).get_initial()
+        initial['localization'] = ''
+        return initial
+
+
+class FilmDetailView(DetailView):
+    model = Film
+
+
+class FilmUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Film
+    fields = FilmCreateView.fields
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
+
+
+class FilmDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Film
+    success_url = '/films'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
+
+
+def films(request):
+    length = Film.objects.count()
+    if length % 2 == 0:
+        length /= 2
+    else:
+        length = (length + 1) / 2
+
+    a = []
+    b = []
+    films_list = Film.objects.all()
+    for i in range(len(films_list)):
+        if i % 2 == 0:
+            a.append(films_list[i])
+        else:
+            b.append(films_list[i])
+    if len(a) > len(b):
+        b.append(None)
+
+    context = {
+        'films': zip(a, b),
+        'half_length': length
+    }
+
+    return render(request, 'mycinema/films.html', context)

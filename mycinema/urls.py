@@ -15,5 +15,10 @@ urlpatterns = [
     path('cinemas/<int:pk>/', CinemaDetailView.as_view(), name='cinema-detail'),
     path('cinemas/<int:pk>/opinion', FilmOpinionCreateView.as_view(), name='filmopinion-create'),
     path('cinemas/<int:pk>/update', CinemaUpdateView.as_view(), name='cinema-update'),
-    path('cinemas/<int:pk>/delete', CinemaDeleteView.as_view(), name='cinema-delete')
+    path('cinemas/<int:pk>/delete', CinemaDeleteView.as_view(), name='cinema-delete'),
+    path('films/', views.films, name='films'),
+    path('films/new/', FilmCreateView.as_view(), name='film-create'),
+    path('films/<int:pk>/', FilmDetailView.as_view(), name='film-detail'),
+    path('film/<int:pk>/update', FilmUpdateView.as_view(), name='film-update'),
+    path('film/<int:pk>/delete', FilmDeleteView.as_view(), name='film-delete'),
 ]

@@ -81,9 +81,14 @@ class Film(CommonInfo):
     )
     title = models.CharField(max_length=100)
     genre = models.CharField(max_length=50, null=True, choices=GENRES)
+    image = ResizedImageField(size=[256, 256], crop=['middle', 'center'],
+                              quality=90, upload_to='film/', default='film/film_default.png')
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('film-detail', kwargs={'pk': self.pk})
 
 
 class Staff(CommonInfo):
