@@ -173,6 +173,7 @@ class CinemaDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         return False
 
+
 class FilmCreateView(LoginRequiredMixin, CreateView):
     model = Film
     fields = ['title', 'genre', 'short_description', 'main_description', 'image']
@@ -245,3 +246,151 @@ def films(request):
     }
 
     return render(request, 'mycinema/films.html', context)
+
+
+class SeriesCreateView(LoginRequiredMixin, CreateView):
+    model = Series
+    fields = ['title', 'genre', 'short_description', 'main_description', 'image']
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def get_initial(self, *args, **kwargs):
+        initial = super(SeriesCreateView, self).get_initial()
+        initial['localization'] = ''
+        return initial
+
+
+class SeriesDetailView(DetailView):
+    model = Series
+
+
+class SeriesUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Series
+    fields = SeriesCreateView.fields
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
+
+
+class SeriesDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Series
+    success_url = '/series'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
+
+
+def series(request):
+    length = Series.objects.count()
+    if length % 2 == 0:
+        length /= 2
+    else:
+        length = (length + 1) / 2
+
+    a = []
+    b = []
+    series_list = Series.objects.all()
+    for i in range(len(series_list)):
+        if i % 2 == 0:
+            a.append(series_list[i])
+        else:
+            b.append(series_list[i])
+    if len(a) > len(b):
+        b.append(None)
+
+    context = {
+        'series': zip(a, b),
+        'half_length': length
+    }
+
+    return render(request, 'mycinema/series.html', context)
+
+
+class StaffCreateView(LoginRequiredMixin, CreateView):
+    model = Staff
+    fields = ['name', 'profession', 'image']
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def get_initial(self, *args, **kwargs):
+        initial = super(StaffCreateView, self).get_initial()
+        initial['localization'] = ''
+        return initial
+
+
+class StaffDetailView(DetailView):
+    model = Staff
+
+
+class StaffUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Staff
+    fields = StaffCreateView.fields
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
+
+
+class StaffDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Staff
+    success_url = '/staff'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
+
+
+def staff(request):
+    length = Staff.objects.count()
+    if length % 2 == 0:
+        length /= 2
+    else:
+        length = (length + 1) / 2
+
+    a = []
+    b = []
+    staff_list = Staff.objects.all()
+    for i in range(len(staff_list)):
+        if i % 2 == 0:
+            a.append(staff_list[i])
+        else:
+            b.append(staff_list[i])
+    if len(a) > len(b):
+        b.append(None)
+
+    context = {
+        'staff': zip(a, b),
+        'half_length': length
+    }
+
+    return render(request, 'mycinema/staff.html', context)
