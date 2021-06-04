@@ -15,6 +15,7 @@ class Moderator(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
 
+admin.site.register(FilmOpinions)
 admin.site.register(News)
 admin.site.register(Opinions)
 admin.site.register(Film)

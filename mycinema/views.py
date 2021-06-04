@@ -74,6 +74,17 @@ class OpinionCreateView(CreateView):
         return super().form_valid(form)
 
 
+class FilmOpinionCreateView(CreateView):
+    model = FilmOpinions
+    template_name = 'mycinema/add_opinion.html'
+    fields = ['opinion', 'rating']
+
+    def form_valid(self, form):
+        form.instance.authorek = self.request.user
+        form.instance.filmpost_id = self.kwargs['pk']
+        return super().form_valid(form)
+
+
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = News
     fields = ['title', 'short_description', 'main_description', 'category']
@@ -127,8 +138,10 @@ class CinemaCreateView(LoginRequiredMixin, CreateView):
         initial['localization'] = ''
         return initial
 
+
 class CinemaDetailView(DetailView):
     model = Cinema
+
 
 class CinemaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Cinema

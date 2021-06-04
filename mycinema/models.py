@@ -48,8 +48,6 @@ class News(CommonInfo):
         return reverse('news-detail', kwargs={'pk': self.pk})
 
 
-
-
 class Film(CommonInfo):
     GENRES = (
         ('Action', 'Action'),
@@ -96,13 +94,15 @@ class Cinema(CommonInfo):
                               quality=90, upload_to='cinema/', default='cinema/cinema_default.png')
     localization = models.CharField(max_length=60, default='Unknown')
     opening_hours = models.TextField(blank=True)
-    #repertoire = models.ManyToManyField(Film)
+
+    # repertoire = models.ManyToManyField(Film)
 
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
         return reverse('cinema-detail', kwargs={'pk': self.pk})
+
 
 class Opinions(models.Model):
     RATINGS = (
@@ -113,13 +113,29 @@ class Opinions(models.Model):
         (5, 5)
     )
     authorek = models.ForeignKey(User, on_delete=models.CASCADE)
-
     opinion = models.TextField(blank=True)
     post = models.ForeignKey(News, related_name="opinionss", on_delete=models.CASCADE)
-    #film = models.ForeignKey(Film, related_name="filmss", on_delete=models.CASCADE)
-    #staff = models.ForeignKey(Staff, related_name="staffs", on_delete=models.CASCADE)
-    #cinema = models.ForeignKey(Cinema, related_name="opinionss", on_delete=models.CASCADE)
+    rating = models.IntegerField(choices=RATINGS)
+    date_posted = models.DateTimeField(default=timezone.now)
 
+    def __str__(self):
+        return self.opinion
+
+    def get_absolute_url(self):
+        return reverse('mycinema-home')
+
+
+class FilmOpinions(models.Model):
+    RATINGS = (
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),
+        (5, 5)
+    )
+    authorek = models.ForeignKey(User, on_delete=models.CASCADE)
+    filmpost = models.ForeignKey(Cinema, related_name="filmopinions", on_delete=models.CASCADE)
+    opinion = models.TextField(blank=True)
     rating = models.IntegerField(choices=RATINGS)
     date_posted = models.DateTimeField(default=timezone.now)
 
