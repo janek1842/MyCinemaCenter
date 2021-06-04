@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'mycinema/main.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'mycinema/cinema.css' %}">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <title>Hello, world!</title>
+
+    {% if title %}
+        <title>MyCinemaCenter - {{ title }}</title>
+    {% else %}
+        <title>MyCinemaCenter</title>
+    {% endif %}
+</head>
+<body>
+
+<header class="site-header">
+    <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <div class="container">
+            <a class="navbar-brand mr-4" href="/">MyCinemaCenter</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
+                    aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarToggle">
+                <div class="navbar-nav mr-auto">
+                    <a class="nav-item nav-link" href="{% url 'mycinema-home' %}">Home</a>
+                    {% if user.is_authenticated %}
+                        <a class="nav-item nav-link" href="{% url 'mycinema-about' %}">MyCinema</a>
+                    {% endif %}
+                    <a class="nav-item nav-link" href="{% url 'films' %}">Filmy</a>
+                    <a class="nav-item nav-link" href="{% url 'mycinema-about' %}">Seriale</a>
+                    <a class="nav-item nav-link" href="{% url 'mycinema-about' %}">Postacie</a>
+                    <a class="nav-item nav-link" href="{% url 'cinemas' %}">Kina</a>
+                    <a class="nav-item nav-link" href="#">Rankingi</a>
+                </div>
+                <!-- Navbar Right Side -->
+                <div class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+                        <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
+
+                    {% else %}
+                        <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+                        <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+<main role="main" class="container">
+    <div class="row">
+        <div class="col-md-8">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% block content %}{% endblock %}
+
+        </div>
+        <div class="col-md-4">
+            <div id="cinema-detail-hours"></div>
+            {% if user.is_authenticated %}
+                <div class="content-section">
+                <h3>Add a news !</h3>
+                <p class='text-muted'>Have you heard about something important in a movie world ? Share it !
+                <ul class="list-group">
+
+                <a class="list-group-item list-group-item" href="{% url 'news-create' %}">New News</a>
+
+            </ul>
+            </p>
+            </div>
+            <div class="content-section">
+                <h3>Add a cinemas !</h3>
+                <p class='text-muted'>Do you know some cinemas? Post it here :)</p>
+                <ul class="list-group">
+                    <a class="list-group-item list-group-item" href="{% url 'cinema-create' %}">New Cinema</a>
+                </ul>
+            </div>
+            <div class="content-section">
+                <h3>Add a film</h3>
+                <p class='text-muted'>Add a film.........</p>
+                <ul class="list-group">
+                    <a class="list-group-item list-group-item" href="{% url 'film-create' %}">New Film</a>
+                </ul>
+            </div>
+        {% endif %}
+
+
+
+            <div class="content-section">
+
+                <h3>Co nowego ?</h3>
+                <p class='text-muted'>Tutaj będą pojawiać się ostatnio dodane posty oraz nadchodzące wydarzenia
+                <ul class="list-group">
+                    <li class="list-group-item list-group-item-light">Ostatnie posty</li>
+                    <li class="list-group-item list-group-item-light">Wydarzenia</li>
+                    <li class="list-group-item list-group-item-light">Premiery</li>
+                    <li class="list-group-item list-group-item-light">Użytkownicy online</li>
+                </ul>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>

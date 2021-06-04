@@ -1,0 +1,49 @@
+{% extends "mycinema/base.html" %}
+{% load extra_tags %}
+{% load my_tags %}
+{% load static %}
+{% block content %}
+
+<div class="container xd">
+{% for film1, film2 in films %}
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="film_img">
+                    <a href="{% url 'film-detail' film1.id %}" class="hide-link-effects">
+                        <img class="card-img-top" id="img-{{ forloop.counter }}" src="{{ film1.image.url }}" alt="Card image cap">
+                        <div class="rate">{{ film1.total_rating }} / 10</div>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'film-detail' film1.id %}" class="hide-link-effects"><h5 class="card-title">{{ film1.title }}</h5></a>
+                  <p class="card-text">{{ film1.short_description }}</p>
+                </div>
+                <div class="card-footer">
+                    <a class="btn btn-primary" href="{% url 'film-detail' film1.id %}" role="button">Read more</a>
+                </div>
+            </div>
+        </div>
+        {% if film2 is not None %}
+        <div class="col-md-6">
+            <div class="card">
+                <div class="film_img">
+                    <a href="{% url 'film-detail' film2.id %}" class="hide-link-effects">
+                        <img class="card-img-top" id="img--{{ forloop.counter }}" src="{{ film2.image.url }}" alt="Card image cap">
+                        <div class="rate">{{ film2.total_rating }} / 10</div>
+                    </a>
+                </div>
+                <div class="card-body">
+                  <a href="{% url 'film-detail' film2.id %}" class="hide-link-effects"><h5 class="card-title">{{ film2.title }}</h5></a>
+                  <p class="card-text">{{ film2.short_description }}</p>
+                </div>
+                <div class="card-footer">
+                  <a class="btn btn-primary" href="{% url 'film-detail' film2.id %}" role="button">Read more</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+{% endfor %}
+</div>
+{% endblock content %}

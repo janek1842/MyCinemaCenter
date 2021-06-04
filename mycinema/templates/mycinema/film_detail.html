@@ -1,0 +1,29 @@
+{% extends "mycinema/base.html" %}
+{% block content %}
+    <div class="card">
+        <div class="card-header text-center">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="{{ object.image.url }}" alt="ERROR 404">
+                </div>
+                <div class="col-md-6">
+                     {% if object.author == user %}
+                        <a class=" btn btn-secondary btn-sm mt-1 mb-1 top-0 end-0" href="{% url 'film-update' object.id %}">Update</a>
+                        <a class=" btn btn-danger btn-sm mt-1 mb-1 top-0 end-0" href="{% url 'film-delete' object.id %}">Delete</a>
+                     {% endif %}
+                <div class="position-absolute top-50 start-50">
+                    <h1>{{ object.title }}</h1>
+                    <h3>{{ object.description }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body more-details" >
+            <p >{{ object.main_description|linebreaks }}</p>
+        </div>
+         <div class="card-footer">
+             <h6>Posted by: <strong>{{ object.author }}</strong> </h6>
+            <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}">
+        </div>
+    </div>
+{% endblock content %}
