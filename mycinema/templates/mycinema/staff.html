@@ -1,0 +1,39 @@
+{% extends "mycinema/base.html" %}
+{% load extra_tags %}
+{% load my_tags %}
+{% load static %}
+{% block content %}
+
+<div class="container xd">
+{% for staff1, staff2 in staff %}
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="staff_img">
+                    <a href="{% url 'staff-detail' staff1.id %}" class="hide-link-effects">
+                        <img class="card-img-top rounded-circle" id="img-{{ forloop.counter }}" src="{{ staff1.image.url }}" alt="Card image cap">
+                    </a>
+                </div>
+                <div class="card-body">
+                  <p class="card-text">{{ staff1.profession }}</p>
+                </div>
+            </div>
+        </div>
+        {% if staff2 is not None %}
+        <div class="col-md-6">
+            <div class="card">
+                <div class="staff_img">
+                    <a href="{% url 'staff-detail' staff2.id %}" class="hide-link-effects">
+                        <img class="card-img-top rounded-circle" id="img--{{ forloop.counter }}" src="{{ staff2.image.url }}" alt="Card image cap">
+                    </a>
+                </div>
+                <div class="card-body">
+                  <p class="card-text">{{ staff2.profession }}</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+{% endfor %}
+</div>
+{% endblock content %}

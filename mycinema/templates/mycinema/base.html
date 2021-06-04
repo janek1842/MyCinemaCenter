@@ -38,8 +38,8 @@
                         <a class="nav-item nav-link" href="{% url 'mycinema-about' %}">MyCinema</a>
                     {% endif %}
                     <a class="nav-item nav-link" href="{% url 'films' %}">Filmy</a>
-                    <a class="nav-item nav-link" href="{% url 'mycinema-about' %}">Seriale</a>
-                    <a class="nav-item nav-link" href="{% url 'mycinema-about' %}">Postacie</a>
+                    <a class="nav-item nav-link" href="{% url 'series' %}">Seriale</a>
+                    <a class="nav-item nav-link" href="{% url 'staff' %}">Postacie</a>
                     <a class="nav-item nav-link" href="{% url 'cinemas' %}">Kina</a>
                     <a class="nav-item nav-link" href="#">Rankingi</a>
                 </div>
@@ -96,6 +96,20 @@
                 <p class='text-muted'>Add a film.........</p>
                 <ul class="list-group">
                     <a class="list-group-item list-group-item" href="{% url 'film-create' %}">New Film</a>
+                </ul>
+            </div>
+            <div class="content-section">
+                <h3>SERIEEES</h3>
+                <p class='text-muted'>SERIES</p>
+                <ul class="list-group">
+                    <a class="list-group-item list-group-item" href="{% url 'series-create' %}">New Series</a>
+                </ul>
+            </div>
+            <div class="content-section">
+                <h3>STAFFFFFFFFFFFFFF</h3>
+                <p class='text-muted'>STAFF</p>
+                <ul class="list-group">
+                    <a class="list-group-item list-group-item" href="{% url 'staff-create' %}">Add Staff</a>
                 </ul>
             </div>
         {% endif %}

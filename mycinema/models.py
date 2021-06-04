@@ -91,6 +91,33 @@ class Film(CommonInfo):
         return reverse('film-detail', kwargs={'pk': self.pk})
 
 
+class Series(CommonInfo):
+    GENRES = (
+        ('Action', 'Action'),
+        ('Adventure', 'Adventure'),
+        ('Comedy', 'Comedy'),
+        ('Crime', 'Crime'),
+        ('Fantasy', 'Fantasy'),
+        ('Historical', 'Historical'),
+        ('Horror', 'Horror'),
+        ('Musical', 'Musical'),
+        ('Romance', 'Romance'),
+        ('Science Fiction', 'Science Fiction'),
+        ('Thriller', 'Thriller'),
+        ('Western', 'Western'),
+    )
+    title = models.CharField(max_length=100)
+    genre = models.CharField(max_length=50, null=True, choices=GENRES)
+    image = ResizedImageField(size=[256, 256], crop=['middle', 'center'],
+                              quality=90, upload_to='series/', default='series/series_default.png')
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse('series-detail', kwargs={'pk': self.pk})
+
+
 class Staff(CommonInfo):
     PROFESSIONS = (
         ('Actor', 'Actor'),
@@ -103,10 +130,15 @@ class Staff(CommonInfo):
     )
     name = models.CharField(max_length=100)
     profession = models.CharField(max_length=50, null=True, choices=PROFESSIONS)
+    image = ResizedImageField(size=[256, 256], crop=['middle', 'center'],
+                              quality=90, upload_to='cinema/', default='staff/staff_default.png')
     related_films = models.ManyToManyField(Film)
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('staff-detail', kwargs={'pk': self.pk})
 
 
 class Cinema(CommonInfo):
