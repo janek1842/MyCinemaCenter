@@ -12,9 +12,11 @@
                 <div class="staff_img">
                     <a href="{% url 'staff-detail' staff1.id %}" class="hide-link-effects">
                         <img class="card-img-top rounded-circle" id="img-{{ forloop.counter }}" src="{{ staff1.image.url }}" alt="Card image cap">
+
                     </a>
                 </div>
                 <div class="card-body">
+                  <p class="card-text">{{ staff1.name }}</p>
                   <p class="card-text">{{ staff1.profession }}</p>
                 </div>
             </div>
@@ -28,6 +30,7 @@
                     </a>
                 </div>
                 <div class="card-body">
+                    <p class="card-text">{{ staff2.name }}</p>
                   <p class="card-text">{{ staff2.profession }}</p>
                 </div>
             </div>

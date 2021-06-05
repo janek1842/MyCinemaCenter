@@ -14,6 +14,7 @@
                 <div class="position-absolute top-50 start-50">
                     <h1>{{ object.title }}</h1>
                     <h3>{{ object.description }}</h3>
+                    <h5>Rate: {{ object.get_total_rate }}/5.0</h5>
                     </div>
                 </div>
             </div>
@@ -26,4 +27,40 @@
             <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}">
         </div>
     </div>
+
+    </br>
+    </br>
+
+    <article class="media content-section">
+
+        <div class="media-body">
+
+            <div class="article-metadata">
+
+            </div>
+
+            <h2> Comments({{ series.seriesopinions.count }}) </h2>
+
+            </br>
+            {% if user.is_authenticated %}
+                <a href="{% url 'seriesopinion-create' object.id %}"> Add comment</a>
+            {% else %}
+                <a href="#"> You need to be logged in to write a comment </a>
+            {% endif %}
+            </br>
+            </br>
+            {% if not series.seriesopinions.all %}
+                No comments yet...
+            {% else %}
+                {% for comment in series.seriesopinions.all %}
+                    <a class="mr-2" href="#">{{ comment.authorek }}</a>
+                    <small class="text-muted">{{ comment.date_posted|date:"F d,Y" }}</small>
+                    <p>{{ comment.opinion }}</p>
+                    <strong><p>My Rate: {{ comment.rating }}/5</p></strong>
+                    <hr bgcolor="black">
+                {% endfor %}
+            {% endif %}
+
+        </div>
+    </article>
 {% endblock content %}

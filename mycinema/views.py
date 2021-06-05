@@ -84,6 +84,36 @@ class FilmOpinionCreateView(CreateView):
         form.instance.filmpost_id = self.kwargs['pk']
         return super().form_valid(form)
 
+class CinemaOpinionCreateView(CreateView):
+    model = CinemaOpinions
+    template_name = 'mycinema/add_opinion.html'
+    fields = ['opinion', 'rating']
+
+    def form_valid(self, form):
+        form.instance.authorek = self.request.user
+        form.instance.cinemapost_id = self.kwargs['pk']
+        return super().form_valid(form)
+
+class StaffOpinionCreateView(CreateView):
+    model = StaffOpinions
+    template_name = 'mycinema/add_opinion.html'
+    fields = ['opinion', 'rating']
+
+    def form_valid(self, form):
+        form.instance.authorek = self.request.user
+        form.instance.staffpost_id = self.kwargs['pk']
+        return super().form_valid(form)
+
+class SeriesOpinionCreateView(CreateView):
+    model = SeriesOpinions
+    template_name = 'mycinema/add_opinion.html'
+    fields = ['opinion', 'rating']
+
+    def form_valid(self, form):
+        form.instance.authorek = self.request.user
+        form.instance.seriespost_id = self.kwargs['pk']
+        return super().form_valid(form)
+
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = News

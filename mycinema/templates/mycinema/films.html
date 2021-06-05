@@ -12,7 +12,7 @@
                 <div class="film_img">
                     <a href="{% url 'film-detail' film1.id %}" class="hide-link-effects">
                         <img class="card-img-top" id="img-{{ forloop.counter }}" src="{{ film1.image.url }}" alt="Card image cap">
-                        <div class="rate">{{ film1.total_rating }} / 10</div>
+
                     </a>
                 </div>
                 <div class="card-body">

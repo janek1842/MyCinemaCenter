@@ -7,23 +7,62 @@
                     <img src="{{ object.image.url }}" alt="ERROR 404">
                 </div>
                 <div class="col-md-6">
-                     {% if object.author == user %}
-                        <a class=" btn btn-secondary btn-sm mt-1 mb-1 top-0 end-0" href="{% url 'staff-update' object.id %}">Update</a>
-                        <a class=" btn btn-danger btn-sm mt-1 mb-1 top-0 end-0" href="{% url 'staff-delete' object.id %}">Delete</a>
-                     {% endif %}
-                <div class="position-absolute top-50 start-50">
-                    <h1>{{ object.title }}</h1>
-                    <h3>{{ object.description }}</h3>
+                    {% if object.author == user %}
+                        <a class=" btn btn-secondary btn-sm mt-1 mb-1 top-0 end-0"
+                           href="{% url 'staff-update' object.id %}">Update</a>
+                        <a class=" btn btn-danger btn-sm mt-1 mb-1 top-0 end-0"
+                           href="{% url 'staff-delete' object.id %}">Delete</a>
+                    {% endif %}
+                    <div class="position-absolute top-50 start-50">
+                        <h1>{{ object.name }}</h1>
+                        <h3>{{ object.profession }}</h3>
+                        <h5>Rate: {{ object.get_total_rate }}/5.0</h5>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="card-body more-details" >
-            <p >{{ object.main_description|linebreaks }}</p>
+        <div class="card-body more-details">
+            <p>{{ object.main_description|linebreaks }}</p>
         </div>
-         <div class="card-footer">
-             <h6>Posted by: <strong>{{ object.author }}</strong> </h6>
+        <div class="card-footer">
+            <h6>Posted by: <strong>{{ object.author }}</strong></h6>
             <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}">
         </div>
     </div>
+
+    </br>
+    </br>
+
+    <article class="media content-section">
+
+        <div class="media-body">
+
+            <div class="article-metadata">
+
+            </div>
+
+            <h2> Comments({{ staff.staffopinions.count }}) </h2>
+
+            </br>
+            {% if user.is_authenticated %}
+                <a href="{% url 'staffopinion-create' object.id %}"> Add comment</a>
+            {% else %}
+                <a href="#"> You need to be logged in to write a comment </a>
+            {% endif %}
+            </br>
+            </br>
+            {% if not staff.staffopinions.all %}
+                No comments yet...
+            {% else %}
+                {% for comment in staff.staffopinions.all %}
+                    <a class="mr-2" href="#">{{ comment.authorek }}</a>
+                    <small class="text-muted">{{ comment.date_posted|date:"F d,Y" }}</small>
+                    <p>{{ comment.opinion }}</p>
+                    <strong><p>My Rate: {{ comment.rating }}/5</p></strong>
+                    <hr bgcolor="black">
+                {% endfor %}
+            {% endif %}
+
+        </div>
+    </article>
 {% endblock content %}

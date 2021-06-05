@@ -90,6 +90,20 @@ class Film(CommonInfo):
     def get_absolute_url(self):
         return reverse('film-detail', kwargs={'pk': self.pk})
 
+    def get_total_rate(self):
+
+        self.total_rating = 0
+
+        iteratore = 0
+
+        for op in self.filmopinions.all():
+            self.total_rating = self.total_rating + op.rating
+            iteratore = iteratore + 1
+        if iteratore != 0:
+            return self.total_rating / iteratore
+        else:
+            return 0
+
 
 class Series(CommonInfo):
     GENRES = (
@@ -117,6 +131,21 @@ class Series(CommonInfo):
     def get_absolute_url(self):
         return reverse('series-detail', kwargs={'pk': self.pk})
 
+    def get_total_rate(self):
+
+        self.total_rating = 0
+
+        iteratore = 0
+
+        for op in self.seriesopinions.all():
+            self.total_rating = self.total_rating + op.rating
+            iteratore = iteratore + 1
+        if iteratore != 0:
+            return self.total_rating / iteratore
+        else:
+            return 0
+
+
 
 class Staff(CommonInfo):
     PROFESSIONS = (
@@ -140,6 +169,20 @@ class Staff(CommonInfo):
     def get_absolute_url(self):
         return reverse('staff-detail', kwargs={'pk': self.pk})
 
+    def get_total_rate(self):
+
+        self.total_rating = 0
+
+        iteratore = 0
+
+        for op in self.staffopinions.all():
+            self.total_rating = self.total_rating + op.rating
+            iteratore = iteratore + 1
+        if iteratore != 0:
+            return self.total_rating / iteratore
+        else:
+            return 0
+
 
 class Cinema(CommonInfo):
     name = models.CharField(max_length=100)
@@ -159,7 +202,7 @@ class Cinema(CommonInfo):
     def get_total_rate(self):
         self.total_rating = 0
         iteratore = 0
-        for op in self.filmopinions.all():
+        for op in self.cinemasopinions.all():
             self.total_rating = self.total_rating + op.rating
             iteratore = iteratore + 1
         if iteratore != 0:
@@ -189,6 +232,7 @@ class Opinions(models.Model):
         return reverse('mycinema-home')
 
 
+
 class FilmOpinions(models.Model):
     RATINGS = (
         (1, 1),
@@ -198,7 +242,7 @@ class FilmOpinions(models.Model):
         (5, 5)
     )
     authorek = models.ForeignKey(User, on_delete=models.CASCADE)
-    filmpost = models.ForeignKey(Cinema, related_name="filmopinions", on_delete=models.CASCADE)
+    filmpost = models.ForeignKey(Film, related_name="filmopinions", on_delete=models.CASCADE)
     opinion = models.TextField(blank=True)
     rating = models.IntegerField(choices=RATINGS)
     date_posted = models.DateTimeField(default=timezone.now)
@@ -208,3 +252,65 @@ class FilmOpinions(models.Model):
 
     def get_absolute_url(self):
         return reverse('mycinema-home')
+
+
+class StaffOpinions(models.Model):
+    RATINGS = (
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),
+        (5, 5)
+    )
+    authorek = models.ForeignKey(User, on_delete=models.CASCADE)
+    staffpost = models.ForeignKey(Staff, related_name="staffopinions", on_delete=models.CASCADE)
+    opinion = models.TextField(blank=True)
+    rating = models.IntegerField(choices=RATINGS)
+    date_posted = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.opinion
+
+    def get_absolute_url(self):
+        return reverse('mycinema-home')
+
+class SeriesOpinions(models.Model):
+    RATINGS = (
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),
+        (5, 5)
+    )
+    authorek = models.ForeignKey(User, on_delete=models.CASCADE)
+    seriespost = models.ForeignKey(Series, related_name="seriesopinions", on_delete=models.CASCADE)
+    opinion = models.TextField(blank=True)
+    rating = models.IntegerField(choices=RATINGS)
+    date_posted = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.opinion
+
+    def get_absolute_url(self):
+        return reverse('mycinema-home')
+
+class CinemaOpinions(models.Model):
+    RATINGS = (
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),
+        (5, 5)
+    )
+    authorek = models.ForeignKey(User, on_delete=models.CASCADE)
+    cinemapost = models.ForeignKey(Cinema, related_name="cinemasopinions", on_delete=models.CASCADE)
+    opinion = models.TextField(blank=True)
+    rating = models.IntegerField(choices=RATINGS)
+    date_posted = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.opinion
+
+    def get_absolute_url(self):
+        return reverse('mycinema-home')
+

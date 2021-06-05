@@ -12,6 +12,7 @@
             <a class="mr-4" href="#">#{{ post.category }}</a>
             <small class="text-muted">{{ post.date_posted|date:"F d,Y" }}</small>
 
+
         </div>
 
         <h2><a class="article-title" href="{% url 'news-detail' post.id %}">{{ post.title }}</a></h2>
