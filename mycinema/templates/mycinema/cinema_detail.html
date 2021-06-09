@@ -32,7 +32,6 @@
 
     <script>
         $().ready(function () {
-            console.log("sfsf");
             $("div#cinema-detail-hours").append(
                 '<div class="content-section text-center">' +
                 '<h3>Opening hours</h3>' +
@@ -44,38 +43,7 @@
     </br>
     </br>
 
-    <article class="media content-section">
-
-        <div class="media-body">
-
-            <div class="article-metadata">
-
-            </div>
-
-            <h2> Comments({{ cinema.cinemasopinions.count }}) </h2>
-
-            </br>
-            {% if user.is_authenticated %}
-                <a href="{% url 'cinemaopinion-create' object.id %}"> Add comment</a>
-            {% else %}
-                <a href="#"> You need to be logged in to write a comment </a>
-            {% endif %}
-            </br>
-            </br>
-            {% if not cinema.cinemasopinions.all %}
-                No comments yet...
-            {% else %}
-                {% for comment in cinema.cinemasopinions.all %}
-                    <a class="mr-2" href="#">{{ comment.authorek }}</a>
-                    <small class="text-muted">{{ comment.date_posted|date:"F d,Y" }}</small>
-                    <p>{{ comment.opinion }}</p>
-                    <strong><p>My Rate: {{ comment.rating }}/5</p></strong>
-                    <hr bgcolor="black">
-                {% endfor %}
-            {% endif %}
-
-        </div>
-    </article>
+    {% include "mycinema/display_opinions.html" with OBJ=cinema URL="cinemaopinion-create" %}
 {% endblock content %}
 
 

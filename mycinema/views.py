@@ -1,10 +1,10 @@
-from django.shortcuts import render
-from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render
 from .models import *
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse
+from django.http import HttpResponseRedirect
+from .forms import *
 
 
 # Create your views here.
@@ -64,55 +64,37 @@ class PostDetailView(DetailView):
 
 
 class OpinionCreateView(CreateView):
-    model = Opinions
+    class Meta:
+        abstract = True
+
+    model = Opinion
     template_name = 'mycinema/add_opinion.html'
     fields = ['opinion', 'rating']
 
     def form_valid(self, form):
         form.instance.authorek = self.request.user
-        form.instance.post_id = self.kwargs['pk']
+        form.instance.opinion_subject_id = self.kwargs['pk']
         return super().form_valid(form)
 
 
-class FilmOpinionCreateView(CreateView):
+class NewsOpinionCreateView(OpinionCreateView):
+    model = NewsOpinions
+
+
+class FilmOpinionCreateView(OpinionCreateView):
     model = FilmOpinions
-    template_name = 'mycinema/add_opinion.html'
-    fields = ['opinion', 'rating']
 
-    def form_valid(self, form):
-        form.instance.authorek = self.request.user
-        form.instance.filmpost_id = self.kwargs['pk']
-        return super().form_valid(form)
 
-class CinemaOpinionCreateView(CreateView):
+class CinemaOpinionCreateView(OpinionCreateView):
     model = CinemaOpinions
-    template_name = 'mycinema/add_opinion.html'
-    fields = ['opinion', 'rating']
 
-    def form_valid(self, form):
-        form.instance.authorek = self.request.user
-        form.instance.cinemapost_id = self.kwargs['pk']
-        return super().form_valid(form)
 
-class StaffOpinionCreateView(CreateView):
+class StaffOpinionCreateView(OpinionCreateView):
     model = StaffOpinions
-    template_name = 'mycinema/add_opinion.html'
-    fields = ['opinion', 'rating']
 
-    def form_valid(self, form):
-        form.instance.authorek = self.request.user
-        form.instance.staffpost_id = self.kwargs['pk']
-        return super().form_valid(form)
 
-class SeriesOpinionCreateView(CreateView):
+class SeriesOpinionCreateView(OpinionCreateView):
     model = SeriesOpinions
-    template_name = 'mycinema/add_opinion.html'
-    fields = ['opinion', 'rating']
-
-    def form_valid(self, form):
-        form.instance.authorek = self.request.user
-        form.instance.seriespost_id = self.kwargs['pk']
-        return super().form_valid(form)
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -212,11 +194,6 @@ class FilmCreateView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
-    def get_initial(self, *args, **kwargs):
-        initial = super(FilmCreateView, self).get_initial()
-        initial['localization'] = ''
-        return initial
-
 
 class FilmDetailView(DetailView):
     model = Film
@@ -285,11 +262,6 @@ class SeriesCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
-
-    def get_initial(self, *args, **kwargs):
-        initial = super(SeriesCreateView, self).get_initial()
-        initial['localization'] = ''
-        return initial
 
 
 class SeriesDetailView(DetailView):
@@ -360,11 +332,6 @@ class StaffCreateView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
-    def get_initial(self, *args, **kwargs):
-        initial = super(StaffCreateView, self).get_initial()
-        initial['localization'] = ''
-        return initial
-
 
 class StaffDetailView(DetailView):
     model = Staff
@@ -424,3 +391,52 @@ def staff(request):
     }
 
     return render(request, 'mycinema/staff.html', context)
+
+
+def ranking(request):
+    data = []
+
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        films_form = FilmsRankingForm(request.POST)
+        series_form = SeriesRankingForm(request.POST)
+        staff_form = StaffRankingForm(request.POST)
+        news_form = NewsRankingForm(request.POST)
+        cinemas_form = CinemasRankingForm(request.POST)
+
+        # check whether it's valid:
+        if 'cinemas_form_btn' in request.POST and cinemas_form.is_valid():
+            data.append('cinemas are here')
+
+        if 'films_form_btn' in request.POST and films_form.is_valid():
+            data.append('films are here')
+            # process the data in form.cleaned_data as required
+
+        if 'series_form_btn' in request.POST and series_form.is_valid():
+            data.append('series are here')
+
+        if 'staff_form_btn' in request.POST and staff_form.is_valid():
+            data.append('staff are here')
+
+        if 'news_form_btn' in request.POST and news_form.is_valid():
+            data.append('news are here')
+
+
+    else:
+        # if a GET (or any other method) -> create a blank form
+        films_form = FilmsRankingForm()
+        series_form = SeriesRankingForm()
+        staff_form = StaffRankingForm()
+        news_form = NewsRankingForm()
+        cinemas_form = CinemasRankingForm()
+
+    context = {
+        'films_form': films_form,
+        'series_form': series_form,
+        'staff_form': staff_form,
+        'news_form': news_form,
+        'cinemas_form': cinemas_form,
+        'data': data
+    }
+    return render(request, 'mycinema/ranking.html', context)

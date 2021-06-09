@@ -24,38 +24,6 @@
         </div>
     </article>
 
-    <article class="media content-section">
-
-        <div class="media-body">
-
-            <div class="article-metadata">
-
-            </div>
-
-            <h2> Comments({{ news.opinionss.count }}) </h2>
-
-            </br>
-            {% if user.is_authenticated %}
-                <a href="{% url 'opinion-create' object.id %}"> Add comment</a>
-            {% else %}
-                <a href="#"> You need to be logged in to write a comment </a>
-            {% endif %}
-            </br>
-            </br>
-            {% if not news.opinionss.all %}
-                No comments yet...
-            {% else %}
-                {% for comment in news.opinionss.all %}
-                    <a class="mr-2" href="#">{{ comment.authorek }}</a>
-                    <small class="text-muted">{{ comment.date_posted|date:"F d,Y" }}</small>
-                    <p>{{ comment.opinion }}</p>
-                    <strong><p>My Rate: {{ comment.rating }}/5</p></strong>
-                    <hr bgcolor="black">
-                {% endfor %}
-            {% endif %}
-        </div>
-    </article>
-
-
+    {% include "mycinema/display_opinions.html" with OBJ=news URL="opinion-create" %}
 
 {% endblock content %}

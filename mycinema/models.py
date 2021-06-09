@@ -6,6 +6,51 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django_resized import ResizedImageField
 
+# predefined data -------------------------------------------
+CATEGORY = (
+    ('MOVIE', 'MOVIE'),
+    ('TVSERIES', 'TVSERIES'),
+    ('DIRECTORS', 'DIRECTORIES'),
+    ('CINEMAS', 'CINEMAS'),
+    ('ACTORS', 'ACTORS'),
+    ('OTHERS', 'OTHERS')
+)
+
+GENRES = (
+    ('Action', 'Action'),
+    ('Adventure', 'Adventure'),
+    ('Comedy', 'Comedy'),
+    ('Crime', 'Crime'),
+    ('Fantasy', 'Fantasy'),
+    ('Historical', 'Historical'),
+    ('Horror', 'Horror'),
+    ('Musical', 'Musical'),
+    ('Romance', 'Romance'),
+    ('Science Fiction', 'Science Fiction'),
+    ('Thriller', 'Thriller'),
+    ('Western', 'Western'),
+)
+
+PROFESSIONS = (
+    ('Actor', 'Actor'),
+    ('Director', 'Director'),
+    ('Producer', 'Producer'),
+    ('Director of Photography', 'Director of Photography'),
+    ('Costume Designer', 'Costume Designer'),
+    ('Movie Editor', 'Movie Editor'),
+    ('Composer', 'Composer')
+)
+
+RATINGS = (
+    (1, 1),
+    (2, 2),
+    (3, 3),
+    (4, 4),
+    (5, 5)
+)
+
+
+# ----------------------------------------------------------------
 
 # Create your models here.
 class CommonInfo(models.Model):
@@ -28,17 +73,19 @@ class CommonInfo(models.Model):
     def __str__(self):
         return self.id
 
+    def get_total_rate(self):
+        self.total_rating = 0
+        iteratore = 0
+        for op in self.opinions.all():
+            self.total_rating = self.total_rating + op.rating
+            iteratore = iteratore + 1
+        if iteratore != 0:
+            return self.total_rating / iteratore
+        else:
+            return 0
+
 
 class News(CommonInfo):
-    CATEGORY = (
-        ('MOVIE', 'MOVIE'),
-        ('TVSERIES', 'TVSERIES'),
-        ('DIRECTORS', 'DIRECTORIES'),
-        ('CINEMAS', 'CINEMAS'),
-        ('ACTORS', 'ACTORS'),
-        ('OTHERS', 'OTHERS')
-    )
-
     title = models.CharField(max_length=100)
     category = models.CharField(max_length=50, null=True, choices=CATEGORY)
     date_posted = models.DateTimeField(default=timezone.now)
@@ -49,36 +96,8 @@ class News(CommonInfo):
     def get_absolute_url(self):
         return reverse('news-detail', kwargs={'pk': self.pk})
 
-    def get_total_rate(self):
-
-        self.total_rating = 0
-
-        iteratore = 0
-
-        for op in self.opinionss.all():
-            self.total_rating = self.total_rating + op.rating
-            iteratore = iteratore + 1
-        if iteratore != 0:
-            return self.total_rating / iteratore
-        else:
-            return 0
-
 
 class Film(CommonInfo):
-    GENRES = (
-        ('Action', 'Action'),
-        ('Adventure', 'Adventure'),
-        ('Comedy', 'Comedy'),
-        ('Crime', 'Crime'),
-        ('Fantasy', 'Fantasy'),
-        ('Historical', 'Historical'),
-        ('Horror', 'Horror'),
-        ('Musical', 'Musical'),
-        ('Romance', 'Romance'),
-        ('Science Fiction', 'Science Fiction'),
-        ('Thriller', 'Thriller'),
-        ('Western', 'Western'),
-    )
     title = models.CharField(max_length=100)
     genre = models.CharField(max_length=50, null=True, choices=GENRES)
     image = ResizedImageField(size=[256, 256], crop=['middle', 'center'],
@@ -90,36 +109,8 @@ class Film(CommonInfo):
     def get_absolute_url(self):
         return reverse('film-detail', kwargs={'pk': self.pk})
 
-    def get_total_rate(self):
-
-        self.total_rating = 0
-
-        iteratore = 0
-
-        for op in self.filmopinions.all():
-            self.total_rating = self.total_rating + op.rating
-            iteratore = iteratore + 1
-        if iteratore != 0:
-            return self.total_rating / iteratore
-        else:
-            return 0
-
 
 class Series(CommonInfo):
-    GENRES = (
-        ('Action', 'Action'),
-        ('Adventure', 'Adventure'),
-        ('Comedy', 'Comedy'),
-        ('Crime', 'Crime'),
-        ('Fantasy', 'Fantasy'),
-        ('Historical', 'Historical'),
-        ('Horror', 'Horror'),
-        ('Musical', 'Musical'),
-        ('Romance', 'Romance'),
-        ('Science Fiction', 'Science Fiction'),
-        ('Thriller', 'Thriller'),
-        ('Western', 'Western'),
-    )
     title = models.CharField(max_length=100)
     genre = models.CharField(max_length=50, null=True, choices=GENRES)
     image = ResizedImageField(size=[256, 256], crop=['middle', 'center'],
@@ -131,32 +122,8 @@ class Series(CommonInfo):
     def get_absolute_url(self):
         return reverse('series-detail', kwargs={'pk': self.pk})
 
-    def get_total_rate(self):
-
-        self.total_rating = 0
-
-        iteratore = 0
-
-        for op in self.seriesopinions.all():
-            self.total_rating = self.total_rating + op.rating
-            iteratore = iteratore + 1
-        if iteratore != 0:
-            return self.total_rating / iteratore
-        else:
-            return 0
-
-
 
 class Staff(CommonInfo):
-    PROFESSIONS = (
-        ('Actor', 'Actor'),
-        ('Director', 'Director'),
-        ('Producer', 'Producer'),
-        ('Director of Photography', 'Director of Photography'),
-        ('Costume Designer', 'Costume Designer'),
-        ('Movie Editor', 'Movie Editor'),
-        ('Composer', 'Composer')
-    )
     name = models.CharField(max_length=100)
     profession = models.CharField(max_length=50, null=True, choices=PROFESSIONS)
     image = ResizedImageField(size=[256, 256], crop=['middle', 'center'],
@@ -168,20 +135,6 @@ class Staff(CommonInfo):
 
     def get_absolute_url(self):
         return reverse('staff-detail', kwargs={'pk': self.pk})
-
-    def get_total_rate(self):
-
-        self.total_rating = 0
-
-        iteratore = 0
-
-        for op in self.staffopinions.all():
-            self.total_rating = self.total_rating + op.rating
-            iteratore = iteratore + 1
-        if iteratore != 0:
-            return self.total_rating / iteratore
-        else:
-            return 0
 
 
 class Cinema(CommonInfo):
@@ -199,50 +152,12 @@ class Cinema(CommonInfo):
     def get_absolute_url(self):
         return reverse('cinema-detail', kwargs={'pk': self.pk})
 
-    def get_total_rate(self):
-        self.total_rating = 0
-        iteratore = 0
-        for op in self.cinemasopinions.all():
-            self.total_rating = self.total_rating + op.rating
-            iteratore = iteratore + 1
-        if iteratore != 0:
-            return self.total_rating / iteratore
-        else:
-            return 0
 
+class Opinion(models.Model):
+    class Meta:
+        abstract = True
 
-class Opinions(models.Model):
-    RATINGS = (
-        (1, 1),
-        (2, 2),
-        (3, 3),
-        (4, 4),
-        (5, 5)
-    )
     authorek = models.ForeignKey(User, on_delete=models.CASCADE)
-    opinion = models.TextField(blank=True)
-    post = models.ForeignKey(News, related_name="opinionss", on_delete=models.CASCADE)
-    rating = models.IntegerField(choices=RATINGS)
-    date_posted = models.DateTimeField(default=timezone.now)
-
-    def __str__(self):
-        return self.opinion
-
-    def get_absolute_url(self):
-        return reverse('mycinema-home')
-
-
-
-class FilmOpinions(models.Model):
-    RATINGS = (
-        (1, 1),
-        (2, 2),
-        (3, 3),
-        (4, 4),
-        (5, 5)
-    )
-    authorek = models.ForeignKey(User, on_delete=models.CASCADE)
-    filmpost = models.ForeignKey(Film, related_name="filmopinions", on_delete=models.CASCADE)
     opinion = models.TextField(blank=True)
     rating = models.IntegerField(choices=RATINGS)
     date_posted = models.DateTimeField(default=timezone.now)
@@ -254,63 +169,21 @@ class FilmOpinions(models.Model):
         return reverse('mycinema-home')
 
 
-class StaffOpinions(models.Model):
-    RATINGS = (
-        (1, 1),
-        (2, 2),
-        (3, 3),
-        (4, 4),
-        (5, 5)
-    )
-    authorek = models.ForeignKey(User, on_delete=models.CASCADE)
-    staffpost = models.ForeignKey(Staff, related_name="staffopinions", on_delete=models.CASCADE)
-    opinion = models.TextField(blank=True)
-    rating = models.IntegerField(choices=RATINGS)
-    date_posted = models.DateTimeField(default=timezone.now)
+class NewsOpinions(Opinion):
+    opinion_subject = models.ForeignKey(News, related_name="opinions", on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.opinion
 
-    def get_absolute_url(self):
-        return reverse('mycinema-home')
+class FilmOpinions(Opinion):
+    opinion_subject = models.ForeignKey(Film, related_name="opinions", on_delete=models.CASCADE)
 
-class SeriesOpinions(models.Model):
-    RATINGS = (
-        (1, 1),
-        (2, 2),
-        (3, 3),
-        (4, 4),
-        (5, 5)
-    )
-    authorek = models.ForeignKey(User, on_delete=models.CASCADE)
-    seriespost = models.ForeignKey(Series, related_name="seriesopinions", on_delete=models.CASCADE)
-    opinion = models.TextField(blank=True)
-    rating = models.IntegerField(choices=RATINGS)
-    date_posted = models.DateTimeField(default=timezone.now)
 
-    def __str__(self):
-        return self.opinion
+class StaffOpinions(Opinion):
+    opinion_subject = models.ForeignKey(Staff, related_name="opinions", on_delete=models.CASCADE)
 
-    def get_absolute_url(self):
-        return reverse('mycinema-home')
 
-class CinemaOpinions(models.Model):
-    RATINGS = (
-        (1, 1),
-        (2, 2),
-        (3, 3),
-        (4, 4),
-        (5, 5)
-    )
-    authorek = models.ForeignKey(User, on_delete=models.CASCADE)
-    cinemapost = models.ForeignKey(Cinema, related_name="cinemasopinions", on_delete=models.CASCADE)
-    opinion = models.TextField(blank=True)
-    rating = models.IntegerField(choices=RATINGS)
-    date_posted = models.DateTimeField(default=timezone.now)
+class SeriesOpinions(Opinion):
+    opinion_subject = models.ForeignKey(Series, related_name="opinions", on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.opinion
 
-    def get_absolute_url(self):
-        return reverse('mycinema-home')
-
+class CinemaOpinions(Opinion):
+    opinion_subject = models.ForeignKey(Cinema, related_name="opinions", on_delete=models.CASCADE)

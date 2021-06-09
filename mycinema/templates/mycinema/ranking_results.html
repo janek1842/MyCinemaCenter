@@ -1,0 +1,21 @@
+{% extends "mycinema/base.html" %}
+{% load crispy_forms_tags%}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <button class="btn btn-dark btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        Filter
+        </button>
+    </div>
+    <div class="collapse" id="collapseExample">
+        <div class="card-body">
+            <form action="/ranking/" method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <input class="btn btn-dark btn-sm" type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+</div>
+    <a>{{ form.method.get_bound_field }}</a>
+{% endblock %}

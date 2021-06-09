@@ -3,9 +3,6 @@ from django.contrib import admin
 # Register your models here.
 from .models import *
 
-from .models import News, Opinions, Cinema
-
-
 class Moderator(admin.ModelAdmin):
     readonly_fields = ['moderator', 'total_rating', 'opinion_counter', 'author']
 
@@ -17,7 +14,7 @@ class Moderator(admin.ModelAdmin):
 
 admin.site.register(FilmOpinions)
 admin.site.register(News)
-admin.site.register(Opinions)
+admin.site.register(NewsOpinions)
 admin.site.register(Film)
 admin.site.register(Staff)
 admin.site.register(Cinema, Moderator)

@@ -6,7 +6,7 @@ urlpatterns = [
     path('', PostListView.as_view(), name='mycinema-home'),
     path('news/<int:pk>/', PostDetailView.as_view(), name='news-detail'),
     path('news/new/', PostCreateView.as_view(), name='news-create'),
-    path('news/<int:pk>/opinion/', OpinionCreateView.as_view(), name='opinion-create'),
+    path('news/<int:pk>/opinion/', NewsOpinionCreateView.as_view(), name='opinion-create'),
     path('news/<int:pk>/update', PostUpdateView.as_view(), name='news-update'),
     path('news/<int:pk>/delete', PostDeleteView.as_view(), name='news-delete'),
     path('about/', views.about, name='mycinema-about'),
@@ -34,4 +34,5 @@ urlpatterns = [
     path('staff/<int:pk>/opinion', StaffOpinionCreateView.as_view(), name='staffopinion-create'),
     path('staff/<int:pk>/update', StaffUpdateView.as_view(), name='staff-update'),
     path('staff/<int:pk>/delete', StaffDeleteView.as_view(), name='staff-delete'),
+    path('ranking/', views.ranking, name='ranking'),
 ]

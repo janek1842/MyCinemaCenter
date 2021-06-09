@@ -1,0 +1,109 @@
+{% extends "mycinema/base.html" %}
+{% load crispy_forms_tags%}
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+
+            <div class="form-check form-check-inline">
+                 <h7>Choose a ranking subject:</h7>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="ranking-news">
+                <label class="form-check-label" for="inlineRadio1">News</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="ranking-films">
+                <label class="form-check-label" for="inlineRadio2">Films</label>
+            </div>
+             <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="ranking-series" >
+                <label class="form-check-label" for="inlineRadio3">Series</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="ranking-staff">
+                <label class="form-check-label" for="inlineRadio4">Staff</label>
+            </div>
+             <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="ranking-cinemas">
+                <label class="form-check-label" for="inlineRadio5">Cinemas</label>
+            </div>
+            <button class="btn btn-dark btn-sm" id="hide-button">Hide</button>
+        </div>
+        <div id="all-forms">
+            <div class="collapse" id="ranking-news-form">
+                <div class="card-body">
+                    <form action="/ranking/" method="post">
+                        {% csrf_token %}
+                        {{ news_form|crispy }}
+                        <input class="btn btn-dark btn-sm" type="submit" name="news_form_btn" value="Submit">
+                    </form>
+                </div>
+            </div>
+            <div class="collapse" id="ranking-films-form">
+                <div class="card-body">
+                    <form action="/ranking/" method="post">
+                        {% csrf_token %}
+                        {{ films_form|crispy }}
+                        <input class="btn btn-dark btn-sm" name="films_form_btn" type="submit" value="Submit">
+                    </form>
+                </div>
+            </div>
+            <div class="collapse" id="ranking-series-form">
+                <div class="card-body">
+                    <form action="/ranking/" method="post">
+                        {% csrf_token %}
+                        {{ series_form|crispy }}
+                        <input class="btn btn-dark btn-sm" name="series_form_btn" type="submit" value="Submit">
+                    </form>
+                </div>
+            </div>
+            <div class="collapse" id="ranking-staff-form">
+                <div class="card-body">
+                    <form action="/ranking/" method="post">
+                        {% csrf_token %}
+                        {{ staff_form|crispy }}
+                        <input class="btn btn-dark btn-sm" name="staff_form_btn" type="submit" value="Submit">
+                    </form>
+                </div>
+            </div>
+            <div class="collapse" id="ranking-cinemas-form">
+                <div class="card-body">
+                    <form action="/ranking/" method="post">
+                        {% csrf_token %}
+                        {{ cinemas_form|crispy }}
+                        <input class="btn btn-dark btn-sm" name="cinemas_form_btn" type="submit" value="Submit">
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {% if data is not None %}
+        <p>{{ data }}</p>
+
+    {% endif %}
+    <script>
+
+    {#.collapse("show/hide")#}
+
+    function hide_all_forms(){
+        let forms = $("div#all-forms div.collapse");
+        console.log(forms);
+        forms.each(function (){
+            $(this).hide();
+        })
+    }
+    function show_form(formId){
+        hide_all_forms();
+        $("#" + formId).show();
+    }
+
+    $("div.card-header").on("click", "input",function (){
+        show_form(this.id + '-form');
+    });
+
+    $("#hide-button").on("click",function (){
+        hide_all_forms();
+    });
+    </script>
+{% endblock %}
