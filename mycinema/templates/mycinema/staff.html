@@ -4,39 +4,90 @@
 {% load static %}
 {% block content %}
 
-<div class="container xd">
-{% for staff1, staff2 in staff %}
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="staff_img">
-                    <a href="{% url 'staff-detail' staff1.id %}" class="hide-link-effects">
-                        <img class="card-img-top rounded-circle" id="img-{{ forloop.counter }}" src="{{ staff1.image.url }}" alt="Card image cap">
+    <div class="container xd">
+        {% for staff1, staff2 in staff %}
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="staff_img">
+                            <a href="{% url 'staff-detail' staff1.id %}" class="hide-link-effects">
+                                <img class="card-img-top rounded-circle" id="img-{{ forloop.counter }}"
+                                     src="{{ staff1.image.url }}" alt="Card image cap">
 
-                    </a>
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ staff1.name }}</p>
+                            <p class="card-text">{{ staff1.profession }}</p>
+                            {% if user.is_authenticated %}
+                                {% if not user in staff1.subscribed_by.all %}
+
+                                    <form action="/addsub/" method="post">{% csrf_token %}
+                                        <input type="hidden" value="{{ user.id }}" name="subscribedid"></input>
+                                        <input type="hidden" value="{{ staff1.id }}" name="subscribedfilmid"></input>
+                                        <input type="hidden" value="staff" name="rodzaj"></input>
+                                        <input value="Sub!" type="submit" name="subbutton"
+                                               class="btn float-right btn-success btn-circle btn-sm ">
+                                        </input>
+                                    </form>
+
+                                {% else %}
+                                    <form action="/unsub/" method="post">{% csrf_token %}
+                                        <input type="hidden" value="{{ user.id }}" name="subscribedid"></input>
+                                        <input type="hidden" value="{{ staff1.id }}" name="subscribedfilmid"></input>
+                                        <input type="hidden" value="staff" name="rodzaj"></input>
+
+                                        <input value="Unsub!" type="submit" name="subbutton"
+                                               class="btn float-right btn-danger btn-circle btn-sm ">
+                                        </input>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                  <p class="card-text">{{ staff1.name }}</p>
-                  <p class="card-text">{{ staff1.profession }}</p>
-                </div>
+                {% if staff2 is not None %}
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="staff_img">
+                                <a href="{% url 'staff-detail' staff2.id %}" class="hide-link-effects">
+                                    <img class="card-img-top rounded-circle" id="img--{{ forloop.counter }}"
+                                         src="{{ staff2.image.url }}" alt="Card image cap">
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">{{ staff2.name }}</p>
+                                <p class="card-text">{{ staff2.profession }}</p>
+                                {% if user.is_authenticated %}
+                                    {% if not user in staff2.subscribed_by.all %}
+
+                                        <form action="/addsub/" method="post">{% csrf_token %}
+                                            <input type="hidden" value="{{ user.id }}" name="subscribedid"></input>
+                                            <input type="hidden" value="{{ staff2.id }}"
+                                                   name="subscribedfilmid"></input>
+                                            <input type="hidden" value="staff" name="rodzaj"></input>
+                                            <input value="Sub!" type="submit" name="subbutton"
+                                                   class="btn float-right btn-success btn-circle btn-sm ">
+                                            </input>
+                                        </form>
+                                    {% else %}
+                                        <form action="/unsub/" method="post">{% csrf_token %}
+                                            <input type="hidden" value="{{ user.id }}" name="subscribedid"></input>
+                                            <input type="hidden" value="{{ staff2.id }}"
+                                                   name="subscribedfilmid"></input>
+                                            <input type="hidden" value="staff" name="rodzaj"></input>
+
+                                            <input value="Unsub!" type="submit" name="subbutton"
+                                                   class="btn float-right btn-danger btn-circle btn-sm ">
+                                            </input>
+                                        </form>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
-        </div>
-        {% if staff2 is not None %}
-        <div class="col-md-6">
-            <div class="card">
-                <div class="staff_img">
-                    <a href="{% url 'staff-detail' staff2.id %}" class="hide-link-effects">
-                        <img class="card-img-top rounded-circle" id="img--{{ forloop.counter }}" src="{{ staff2.image.url }}" alt="Card image cap">
-                    </a>
-                </div>
-                <div class="card-body">
-                    <p class="card-text">{{ staff2.name }}</p>
-                  <p class="card-text">{{ staff2.profession }}</p>
-                </div>
-            </div>
-        </div>
-        {% endif %}
+        {% endfor %}
     </div>
-{% endfor %}
-</div>
 {% endblock content %}

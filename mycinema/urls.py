@@ -35,4 +35,7 @@ urlpatterns = [
     path('staff/<int:pk>/update', StaffUpdateView.as_view(), name='staff-update'),
     path('staff/<int:pk>/delete', StaffDeleteView.as_view(), name='staff-delete'),
     path('ranking/', views.ranking, name='ranking'),
+    path('mycinema/', views.mycinema, name='mycinema-about'),
+    path('addsub/', views.addsub, name='mycinema-addsub'),
+    path('unsub/', views.unsub, name='mycinema-addsub'),
 ]

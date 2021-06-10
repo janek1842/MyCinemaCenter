@@ -61,9 +61,10 @@ class CommonInfo(models.Model):
     main_description = models.TextField(blank=True)
     total_rating = models.FloatField(default=0)
     is_accepted = models.BooleanField(default=False)
-    author = models.ForeignKey(User, on_delete=models.RESTRICT)
+    author = models.ForeignKey(User, on_delete=models.RESTRICT, related_name='%(app_label)s_%(class)sauthor')
     moderator = models.CharField(max_length=50, default="-")
     opinion_counter = models.IntegerField(default=0)
+    subscribed_by = models.ManyToManyField(User, related_name='%(app_label)s_%(class)subscriptions')
 
     def handle_rating(self, new_rating):
         total = self.opinion_counter * self.total_rating
@@ -83,6 +84,22 @@ class CommonInfo(models.Model):
             return self.total_rating / iteratore
         else:
             return 0
+
+    def subscribe(self, user):
+        self.subscribed_by.add(user)
+
+    def unsubscribe(self, user):
+        self.subscribed_by.remove(user)
+
+    def issubscribed(self,user):
+        requester = 0
+        for objekt in self.subscribed_by.all():
+            if objekt == user:
+                requester = requester + 1
+        if requester>0:
+            return True
+        else:
+            return False
 
 
 class News(CommonInfo):

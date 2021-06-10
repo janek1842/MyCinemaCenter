@@ -47,6 +47,52 @@ def about(request):
     return render(request, 'mycinema/about.html', {'title': 'Mytitle'})
 
 
+def addsub(request):
+    if request.method == 'POST':
+        if "subscribedid" in request.POST and "subscribedfilmid" in request.POST:
+            idusera = request.POST['subscribedid']
+            idfilmu = request.POST['subscribedfilmid']
+            rodzaj = request.POST['rodzaj']
+
+            user = User.objects.get(pk=idusera)
+
+            if (rodzaj == "film"):
+                film = Film.objects.get(pk=idfilmu)
+            if (rodzaj == "series"):
+                film = Series.objects.get(pk=idfilmu)
+            if (rodzaj == "cinema"):
+                film = Cinema.objects.get(pk=idfilmu)
+            if (rodzaj == "staff"):
+                film = Staff.objects.get(pk=idfilmu)
+
+            film.subscribed_by.add(user)
+
+    return render(request, 'mycinema/films.html')
+
+
+def unsub(request):
+    if request.method == 'POST':
+        if "subscribedid" in request.POST and "subscribedfilmid" in request.POST:
+            idusera = request.POST['subscribedid']
+            idfilmu = request.POST['subscribedfilmid']
+            rodzaj = request.POST['rodzaj']
+
+            user = User.objects.get(pk=idusera)
+
+            if (rodzaj == "film"):
+                film = Film.objects.get(pk=idfilmu)
+            if (rodzaj == "series"):
+                film = Series.objects.get(pk=idfilmu)
+            if (rodzaj == "cinema"):
+                film = Cinema.objects.get(pk=idfilmu)
+            if (rodzaj == "staff"):
+                film = Staff.objects.get(pk=idfilmu)
+
+            film.subscribed_by.remove(user)
+
+    return render(request, 'mycinema/films.html')
+
+
 class PostListView(ListView):
     model = News
     template_name = 'mycinema/home.html'
@@ -393,6 +439,44 @@ def staff(request):
     return render(request, 'mycinema/staff.html', context)
 
 
+def mycinema(request):
+
+    list = []
+
+    list.extend(Staff.objects.filter(subscribed_by=request.user.id))
+    list.extend(Cinema.objects.filter(subscribed_by=request.user.id))
+    list.extend(Film.objects.filter(subscribed_by=request.user.id))
+    list.extend(Series.objects.filter(subscribed_by=request.user.id))
+
+
+    print(list)
+
+    length = len(list)
+
+    if length % 2 == 0:
+        length /= 2
+    else:
+        length = (length + 1) / 2
+
+    a = []
+    b = []
+
+    for i in range(len(list)):
+        if i % 2 == 0:
+            a.append(list[i])
+        else:
+            b.append(list[i])
+    if len(a) > len(b):
+        b.append(None)
+
+    context = {
+        'data': zip(a, b),
+        'half_length': length
+    }
+
+    return render(request, 'mycinema/mycinema.html', context)
+
+
 def ranking(request):
     data = []
 
@@ -439,4 +523,5 @@ def ranking(request):
         'cinemas_form': cinemas_form,
         'data': data
     }
+
     return render(request, 'mycinema/ranking.html', context)

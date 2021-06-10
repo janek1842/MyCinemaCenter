@@ -4,46 +4,97 @@
 {% load static %}
 {% block content %}
 
-<div class="container xd">
-{% for film1, film2 in films %}
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="film_img">
-                    <a href="{% url 'film-detail' film1.id %}" class="hide-link-effects">
-                        <img class="card-img-top" id="img-{{ forloop.counter }}" src="{{ film1.image.url }}" alt="Card image cap">
+    <div class="container xd">
+        {% for film1, film2 in films %}
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="film_img">
+                            <a href="{% url 'film-detail' film1.id %}" class="hide-link-effects">
+                                <img class="card-img-top" id="img-{{ forloop.counter }}" src="{{ film1.image.url }}"
+                                     alt="Card image cap">
 
-                    </a>
+                            </a>
+                        </div>
+                        <div class="card-body">
+
+                            <a href="{% url 'film-detail' film1.id %}" class="hide-link-effects"><h5
+                                    class="card-title">{{ film1.title }}</h5></a>
+                            <p class="card-text">{{ film1.short_description }}</p>
+                        </div>
+                        <div class="card-footer">
+                            <a class="btn btn-primary" href="{% url 'film-detail' film1.id %}" role="button">Read
+                                more</a>
+
+                            {% if user.is_authenticated %}
+                                {% if not user in film1.subscribed_by.all %}
+                                    <form action="/addsub/" method="post">{% csrf_token %}
+                                        <input type="hidden" value="{{ user.id }}" name="subscribedid"></input>
+                                        <input type="hidden" value="{{ film1.id }}" name="subscribedfilmid"></input>
+                                        <input type="hidden" value="film" name="rodzaj">
+                                        <input value="Sub!" type="submit" name="subbutton"
+                                               class="btn float-right btn-success btn-circle btn-sm ">
+                                        </input>
+                                    </form>
+                                {% else %}
+                                    <form action="/unsub/" method="post">{% csrf_token %}
+                                        <input type="hidden" value="{{ user.id }}" name="subscribedid"></input>
+                                        <input type="hidden" value="{{ film1.id }}" name="subscribedfilmid"></input>
+                                        <input type="hidden" value="film" name="rodzaj">
+                                        <input value="Unsub!" type="submit" name="subbutton"
+                                               class="btn float-right btn-danger btn-circle btn-sm ">
+                                        </input>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <a href="{% url 'film-detail' film1.id %}" class="hide-link-effects"><h5 class="card-title">{{ film1.title }}</h5></a>
-                  <p class="card-text">{{ film1.short_description }}</p>
-                </div>
-                <div class="card-footer">
-                    <a class="btn btn-primary" href="{% url 'film-detail' film1.id %}" role="button">Read more</a>
-                </div>
+                {% if film2 is not None %}
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="film_img">
+                                <a href="{% url 'film-detail' film2.id %}" class="hide-link-effects">
+                                    <img class="card-img-top" id="img--{{ forloop.counter }}"
+                                         src="{{ film2.image.url }}" alt="Card image cap">
+
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <a href="{% url 'film-detail' film2.id %}" class="hide-link-effects"><h5
+                                        class="card-title">{{ film2.title }}</h5></a>
+                                <p class="card-text">{{ film2.short_description }}</p>
+                            </div>
+                            <div class="card-footer">
+                                <a class="btn btn-primary" href="{% url 'film-detail' film2.id %}" role="button">Read
+                                    more</a>
+                                {% if user.is_authenticated %}
+                                    {% if not user in film2.subscribed_by.all %}
+
+                                        <form action="/addsub/" method="post">{% csrf_token %}
+                                            <input type="hidden" value="{{ user.id }}" name="subscribedid"></input>
+                                            <input type="hidden" value="{{ film2.id }}" name="subscribedfilmid"></input>
+                                            <input type="hidden" value="film" name="rodzaj">
+                                            <input value="Sub!" type="submit" name="subbutton"
+                                                   class="btn float-right btn-success btn-circle btn-sm ">
+                                            </input>
+                                        </form>
+                                    {% else %}
+                                        <form action="/unsub/" method="post">{% csrf_token %}
+                                            <input type="hidden" value="{{ user.id }}" name="subscribedid"></input>
+                                            <input type="hidden" value="{{ film2.id }}" name="subscribedfilmid">
+                                            <input type="hidden" value="film" name="rodzaj">
+                                            <input value="Unsub!" type="submit" name="subbutton"
+                                                   class="btn float-right btn-danger btn-circle btn-sm ">
+                                            </input>
+                                        </form>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
-        </div>
-        {% if film2 is not None %}
-        <div class="col-md-6">
-            <div class="card">
-                <div class="film_img">
-                    <a href="{% url 'film-detail' film2.id %}" class="hide-link-effects">
-                        <img class="card-img-top" id="img--{{ forloop.counter }}" src="{{ film2.image.url }}" alt="Card image cap">
-                        <div class="rate">{{ film2.total_rating }} / 10</div>
-                    </a>
-                </div>
-                <div class="card-body">
-                  <a href="{% url 'film-detail' film2.id %}" class="hide-link-effects"><h5 class="card-title">{{ film2.title }}</h5></a>
-                  <p class="card-text">{{ film2.short_description }}</p>
-                </div>
-                <div class="card-footer">
-                  <a class="btn btn-primary" href="{% url 'film-detail' film2.id %}" role="button">Read more</a>
-                </div>
-            </div>
-        </div>
-        {% endif %}
+        {% endfor %}
     </div>
-{% endfor %}
-</div>
 {% endblock content %}
