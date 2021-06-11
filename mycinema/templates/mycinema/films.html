@@ -21,7 +21,7 @@
                                     class="card-title">{{ film1.title }}</h5></a>
                             <p class="card-text">{{ film1.short_description }}</p>
                         </div>
-                        <div class="card-footer">
+                        <div class="card-footer card-footer-buttons">
                             <a class="btn btn-primary" href="{% url 'film-detail' film1.id %}" role="button">Read
                                 more</a>
 
@@ -32,7 +32,7 @@
                                         <input type="hidden" value="{{ film1.id }}" name="subscribedfilmid"></input>
                                         <input type="hidden" value="film" name="rodzaj">
                                         <input value="Sub!" type="submit" name="subbutton"
-                                               class="btn float-right btn-success btn-circle btn-sm ">
+                                               class="btn btn-success btn-circle">
                                         </input>
                                     </form>
                                 {% else %}
@@ -41,7 +41,7 @@
                                         <input type="hidden" value="{{ film1.id }}" name="subscribedfilmid"></input>
                                         <input type="hidden" value="film" name="rodzaj">
                                         <input value="Unsub!" type="submit" name="subbutton"
-                                               class="btn float-right btn-danger btn-circle btn-sm ">
+                                               class="btn btn-danger btn-circle">
                                         </input>
                                     </form>
                                 {% endif %}
@@ -64,7 +64,7 @@
                                         class="card-title">{{ film2.title }}</h5></a>
                                 <p class="card-text">{{ film2.short_description }}</p>
                             </div>
-                            <div class="card-footer">
+                            <div class="card-footer card-footer-buttons">
                                 <a class="btn btn-primary" href="{% url 'film-detail' film2.id %}" role="button">Read
                                     more</a>
                                 {% if user.is_authenticated %}
@@ -75,7 +75,7 @@
                                             <input type="hidden" value="{{ film2.id }}" name="subscribedfilmid"></input>
                                             <input type="hidden" value="film" name="rodzaj">
                                             <input value="Sub!" type="submit" name="subbutton"
-                                                   class="btn float-right btn-success btn-circle btn-sm ">
+                                                   class="btn btn-success btn-circle">
                                             </input>
                                         </form>
                                     {% else %}
@@ -84,7 +84,7 @@
                                             <input type="hidden" value="{{ film2.id }}" name="subscribedfilmid">
                                             <input type="hidden" value="film" name="rodzaj">
                                             <input value="Unsub!" type="submit" name="subbutton"
-                                                   class="btn float-right btn-danger btn-circle btn-sm ">
+                                                   class="btn btn-danger btn-circle">
                                             </input>
                                         </form>
                                     {% endif %}

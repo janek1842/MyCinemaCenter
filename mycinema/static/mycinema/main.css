@@ -87,3 +87,8 @@ a.article-title:hover {
     flex-grow: 1;
     margin-bottom: 20px;
 }
+
+.card-footer-buttons{
+    display: flex;
+    justify-content: space-between;
+}
