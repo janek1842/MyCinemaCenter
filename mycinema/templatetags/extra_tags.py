@@ -3,6 +3,26 @@ from django import template
 register = template.Library()
 
 
+@register.filter(name='get_class')
+def get_class(value):
+    return value.__class__.__name__
+
+
+@register.filter(name='get_detail_url')
+def get_detail_url(value):
+    if value.__class__.__name__ == "News":
+        return "news-detail"
+    elif value.__class__.__name__ == "Film":
+        return "film-detail"
+    elif value.__class__.__name__ == "Series":
+        return "series-detail"
+    elif value.__class__.__name__ == "Staff":
+        return "staff-detail"
+    elif value.__class__.__name__ == "Cinema":
+        return "cinema-detail"
+    else:
+        return "mycinema-home"
+
 @register.filter
 def next(some_list, current_index):
     """
@@ -175,3 +195,5 @@ def columns(thelist, n):
 register.filter(rows)
 register.filter(rows_distributed)
 register.filter(columns)
+register.filter(get_class)
+register.filter(get_detail_url)

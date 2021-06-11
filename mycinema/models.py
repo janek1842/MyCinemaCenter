@@ -75,13 +75,13 @@ class CommonInfo(models.Model):
         return self.id
 
     def get_total_rate(self):
-        self.total_rating = 0
-        iteratore = 0
+        total_rating = 0
+        iterator = 0
         for op in self.opinions.all():
-            self.total_rating = self.total_rating + op.rating
-            iteratore = iteratore + 1
-        if iteratore != 0:
-            return self.total_rating / iteratore
+            total_rating = total_rating + op.rating
+            iterator = iterator + 1
+        if iterator != 0:
+            return total_rating / iterator
         else:
             return 0
 

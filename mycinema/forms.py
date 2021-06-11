@@ -1,6 +1,10 @@
 from django import forms
 from .models import GENRES, PROFESSIONS, CATEGORY
 
+ALL = ('All', 'All')
+GENRES = (ALL,) + GENRES
+PROFESSIONS = (ALL,) + PROFESSIONS
+CATEGORY = (ALL,) + CATEGORY
 
 class RankingForm(forms.Form):
     class Meta:

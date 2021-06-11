@@ -1,0 +1,15 @@
+<article class="media content-section">
+    <img class="rounded-circle article-img" src="{{ IMAGE }}">
+    <div class="media-body">
+        <div class="article-metadata">
+            <a class="mr-2">Rate: {{ obj.total_rating }}/5</a>
+            <a class="mr-4">{% if not HASHTAG == "" %}#{{ HASHTAG }}{% endif %}</a>
+            <small class="text-muted">Comments: {{ obj.opinion_counter }}</small>
+
+
+
+        </div>
+        <h2><a class="article-title" href="{% url URL obj.id %}">{{ NAME }}</a></h2>
+        <p class="article-content">{{ SHORT_DESC }}</p>
+    </div>
+</article>

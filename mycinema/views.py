@@ -125,22 +125,62 @@ class OpinionCreateView(CreateView):
 
 class NewsOpinionCreateView(OpinionCreateView):
     model = NewsOpinions
+    
+    def form_valid(self, form):
+        form.instance.authorek = self.request.user
+        form.instance.opinion_subject_id = self.kwargs['pk']
+        film = News.objects.get(pk=form.instance.opinion_subject_id)
+        film.handle_rating(form.instance.rating)
+        film.save()
+        return super().form_valid(form)
 
 
 class FilmOpinionCreateView(OpinionCreateView):
     model = FilmOpinions
+    
+    def form_valid(self, form):
+        form.instance.authorek = self.request.user
+        form.instance.opinion_subject_id = self.kwargs['pk']
+        film = Film.objects.get(pk=form.instance.opinion_subject_id)
+        film.handle_rating(form.instance.rating)
+        film.save()
+        return super().form_valid(form)
 
 
 class CinemaOpinionCreateView(OpinionCreateView):
     model = CinemaOpinions
 
-
+    def form_valid(self, form):
+        form.instance.authorek = self.request.user
+        form.instance.opinion_subject_id = self.kwargs['pk']
+        film = Cinema.objects.get(pk=form.instance.opinion_subject_id)
+        film.handle_rating(form.instance.rating)
+        film.save()
+        return super().form_valid(form)
+        
+        
 class StaffOpinionCreateView(OpinionCreateView):
     model = StaffOpinions
-
+    
+    def form_valid(self, form):
+        form.instance.authorek = self.request.user
+        form.instance.opinion_subject_id = self.kwargs['pk']
+        film = Staff.objects.get(pk=form.instance.opinion_subject_id)
+        film.handle_rating(form.instance.rating)
+        film.save()
+        return super().form_valid(form)
+        
 
 class SeriesOpinionCreateView(OpinionCreateView):
     model = SeriesOpinions
+    
+    def form_valid(self, form):
+        form.instance.authorek = self.request.user
+        form.instance.opinion_subject_id = self.kwargs['pk']
+        film = Series.objects.get(pk=form.instance.opinion_subject_id)
+        film.handle_rating(form.instance.rating)
+        film.save()
+        return super().form_valid(form)
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -372,7 +412,7 @@ def series(request):
 
 class StaffCreateView(LoginRequiredMixin, CreateView):
     model = Staff
-    fields = ['name', 'profession', 'image']
+    fields = ['name', 'profession', 'short_description', 'main_description', 'image']
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -478,9 +518,31 @@ def mycinema(request):
 
 
 def ranking(request):
-    data = []
+    cinemas_list = []
+    news_list = []
+    films_list = []
+    series_list = []
+    staff_list = []
+    
+    def get_data(obj, form):
+        number = form.cleaned_data['items_number']
+        if form.cleaned_data['method'] == 'TR':
+            data = obj.objects.order_by('-total_rating')[:number]
+        else:
+            data = obj.objects.order_by('-opinion_counter')[:number]
+        return data
 
-    # if this is a POST request we need to process the form data
+    def get_data2(obj, form, filter_name, form_var):
+        if form.cleaned_data[form_var] == "All":
+            return get_data(obj, form)
+        else:
+            number = form.cleaned_data['items_number']
+            if form.cleaned_data['method'] == 'TR':
+                data = obj.objects.filter(**{filter_name: form.cleaned_data[form_var]}).order_by('-total_rating')[:number]
+            else:
+                data = obj.objects.filter(**{filter_name: form.cleaned_data[form_var]}).order_by('-opinion_counter')[:number]
+            return data
+
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         films_form = FilmsRankingForm(request.POST)
@@ -491,20 +553,19 @@ def ranking(request):
 
         # check whether it's valid:
         if 'cinemas_form_btn' in request.POST and cinemas_form.is_valid():
-            data.append('cinemas are here')
+            cinemas_list = get_data(Cinema, cinemas_form)
 
         if 'films_form_btn' in request.POST and films_form.is_valid():
-            data.append('films are here')
-            # process the data in form.cleaned_data as required
+            films_list = get_data2(Film, films_form, 'genre', 'genres')
 
         if 'series_form_btn' in request.POST and series_form.is_valid():
-            data.append('series are here')
+            series_list = get_data2(Series, series_form, 'genre', 'series_genres')
 
         if 'staff_form_btn' in request.POST and staff_form.is_valid():
-            data.append('staff are here')
+            staff_list = get_data2(Staff, staff_form, 'professions', 'professions')
 
         if 'news_form_btn' in request.POST and news_form.is_valid():
-            data.append('news are here')
+            news_list = get_data2(News, news_form, 'category', 'category')
 
 
     else:
@@ -521,7 +582,11 @@ def ranking(request):
         'staff_form': staff_form,
         'news_form': news_form,
         'cinemas_form': cinemas_form,
-        'data': data
+        'cinemas_list': cinemas_list,
+        'news_list': news_list,
+        'films_list': films_list,
+        'series_list': series_list,
+        'staff_list': staff_list
     }
-
     return render(request, 'mycinema/ranking.html', context)
+
