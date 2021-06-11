@@ -18,15 +18,10 @@ def home(request):
 
 
 def cinemas(request):
-    length = Cinema.objects.count()
-    if length % 2 == 0:
-        length /= 2
-    else:
-        length = (length + 1) / 2
 
     a = []
     b = []
-    cinemas_list = Cinema.objects.all()
+    cinemas_list = Cinema.objects.filter(is_accepted=True)
     for i in range(len(cinemas_list)):
         if i % 2 == 0:
             a.append(cinemas_list[i])
@@ -37,7 +32,6 @@ def cinemas(request):
 
     context = {
         'cinemas': zip(a, b),
-        'half_length': length
     }
 
     return render(request, 'mycinema/cinemas.html', context)
@@ -527,9 +521,9 @@ def ranking(request):
     def get_data(obj, form):
         number = form.cleaned_data['items_number']
         if form.cleaned_data['method'] == 'TR':
-            data = obj.objects.order_by('-total_rating')[:number]
+            data = obj.objects.filter(is_accepted=True).order_by('-total_rating')[:number]
         else:
-            data = obj.objects.order_by('-opinion_counter')[:number]
+            data = obj.objects.filter(is_accepted=True).order_by('-opinion_counter')[:number]
         return data
 
     def get_data2(obj, form, filter_name, form_var):
@@ -562,7 +556,7 @@ def ranking(request):
             series_list = get_data2(Series, series_form, 'genre', 'series_genres')
 
         if 'staff_form_btn' in request.POST and staff_form.is_valid():
-            staff_list = get_data2(Staff, staff_form, 'professions', 'professions')
+            staff_list = get_data2(Staff, staff_form, 'profession', 'professions')
 
         if 'news_form_btn' in request.POST and news_form.is_valid():
             news_list = get_data2(News, news_form, 'category', 'category')

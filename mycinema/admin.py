@@ -4,7 +4,7 @@ from django.contrib import admin
 from .models import *
 
 class Moderator(admin.ModelAdmin):
-    readonly_fields = ['moderator', 'total_rating', 'opinion_counter', 'author']
+    readonly_fields = ['moderator', 'total_rating', 'opinion_counter', 'author', 'subscribed_by']
 
     def save_model(self, request, obj, form, change):
         if form.changed_data:
