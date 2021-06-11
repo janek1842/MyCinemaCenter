@@ -517,7 +517,7 @@ def ranking(request):
     films_list = []
     series_list = []
     staff_list = []
-    
+
     def get_data(obj, form):
         number = form.cleaned_data['items_number']
         if form.cleaned_data['method'] == 'TR':
@@ -527,10 +527,14 @@ def ranking(request):
         return data
 
     def get_data2(obj, form, filter_name, form_var):
+        number = form.cleaned_data['items_number']
         if form.cleaned_data[form_var] == "All":
-            return get_data(obj, form)
+            if form.cleaned_data['method'] == 'TR':
+                data = obj.objects.order_by('-total_rating')[:number]
+            else:
+                data = obj.objects.order_by('-opinion_counter')[:number]
+            return data
         else:
-            number = form.cleaned_data['items_number']
             if form.cleaned_data['method'] == 'TR':
                 data = obj.objects.filter(**{filter_name: form.cleaned_data[form_var]}).order_by('-total_rating')[:number]
             else:
