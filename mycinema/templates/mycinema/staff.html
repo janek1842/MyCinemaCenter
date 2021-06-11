@@ -4,11 +4,11 @@
 {% load static %}
 {% block content %}
 
-    <div class="container xd">
+    <div class="container">
         {% for staff1, staff2 in staff %}
-            <div class="row mb-4">
+            <div class="row">
                 <div class="col-md-6">
-                    <div class="card">
+                    <div class="card card_flex">
                         <div class="staff_img">
                             <a href="{% url 'staff-detail' staff1.id %}" class="hide-link-effects">
                                 <img class="card-img-top rounded-circle" id="img-{{ forloop.counter }}"
@@ -48,7 +48,7 @@
                 </div>
                 {% if staff2 is not None %}
                     <div class="col-md-6">
-                        <div class="card">
+                        <div class="card card_flex">
                             <div class="staff_img">
                                 <a href="{% url 'staff-detail' staff2.id %}" class="hide-link-effects">
                                     <img class="card-img-top rounded-circle" id="img--{{ forloop.counter }}"

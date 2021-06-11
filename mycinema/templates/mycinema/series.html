@@ -7,9 +7,9 @@
 
     <div class="container xd">
         {% for series1, series2 in series %}
-            <div class="row mb-4">
-                <div class="col-md-6">
-                    <div class="card">
+            <div class="row">
+                <div class="col-md-6 d-flex align-items-stretch">
+                    <div class="card card_flex">
                         <div class="series_img">
                             <a href="{% url 'series-detail' series1.id %}" class="hide-link-effects">
                                 <img class="card-img-top" id="img-{{ forloop.counter }}" src="{{ series1.image.url }}"
@@ -51,8 +51,8 @@
                     </div>
                 </div>
                 {% if series2 is not None %}
-                    <div class="col-md-6">
-                        <div class="card">
+                    <div class="col-md-6 d-flex align-items-stretch">
+                        <div class="card card_flex">
                             <div class="series_img">
                                 <a href="{% url 'series-detail' series2.id %}" class="hide-link-effects">
                                     <img class="card-img-top" id="img--{{ forloop.counter }}"
