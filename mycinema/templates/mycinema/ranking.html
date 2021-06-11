@@ -78,30 +78,10 @@
         </div>
 
     </div>
-    </br>
+    {% if data is not None %}
+        <p>{{ data }}</p>
 
-
-    {% for obj in films_list %}
-        {% include "mycinema/ranking_disp_results.html" with IMAGE=obj.image.url HASHTAG=obj.genre URL="film-detail" SHORT_DESC=obj.short_description NAME=obj.title %}
-    {% endfor %}
-
-    {% for obj in series_list %}
-        {% include "mycinema/ranking_disp_results.html" with IMAGE=obj.image.url HASHTAG=obj.genre URL="series-detail" SHORT_DESC=obj.short_description NAME=obj.title %}
-    {% endfor %}
-
-    {% for obj in staff_list %}
-        {% include "mycinema/ranking_disp_results.html" with IMAGE=obj.image.url HASHTAG=obj.profession URL="staff-detail" SHORT_DESC=obj.short_description NAME=obj.name %}
-    {% endfor %}
-
-    {% for obj in cinemas_list %}
-        {% include "mycinema/ranking_disp_results.html" with IMAGE=obj.image.url HASHTAG="" URL="cinema-detail" SHORT_DESC=obj.localization NAME=obj.name %}
-    {% endfor %}
-
-    {% for obj in news_list %}
-        {% include "mycinema/ranking_disp_results.html" with IMAGE=obj.author.profile.image.url HASHTAG=obj.category URL="news-detail" SHORT_DESC=obj.short_description NAME=obj.title %}
-    {% endfor %}
-
-
+    {% endif %}
     <script>
 
     {#.collapse("show/hide")#}

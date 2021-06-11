@@ -1,20 +1,28 @@
 {% extends "mycinema/base.html" %}
 {% block content %}
     <div class="card">
-        <div class="card-header text-center">
+        <div class="card-header">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-xl-5 col-sm-8">
                     <img src="{{ object.image.url }}" alt="ERROR 404">
                 </div>
-                <div class="col-md-6">
+                <div class="col-xl-7 col-sm-4">
                      {% if object.author == user %}
-                        <a class=" btn btn-secondary btn-sm mt-1 mb-1 top-0 end-0" href="{% url 'film-update' object.id %}">Update</a>
-                        <a class=" btn btn-danger btn-sm mt-1 mb-1 top-0 end-0" href="{% url 'film-delete' object.id %}">Delete</a>
+                        <div class="d-flex flex-row">
+                            <div class="p-1"><a class=" btn btn-secondary btn-sm mt-1 mb-1 top-0 end-0" href="{% url 'film-update' object.id %}">Update</a></div>
+                            <div class="p-1"><a class=" btn btn-danger btn-sm mt-1 mb-1 top-0 end-0" href="{% url 'film-delete' object.id %}">Delete</a></div>
+                        </div>
                      {% endif %}
-                <div class="position-absolute top-50 start-50">
-                    <h1>{{ object.title }}</h1>
-                    <h3>{{ object.description }}</h3>
-                    <h5>Rate: {{ object.get_total_rate }}/5.0</h5>
+                    <div class="d-flex flex-column">
+                        <div class="p-1">
+                            <h1>{{ object.title }}</h1>
+                        </div>
+                        <div class="p-1">
+                            <h3>{{ object.genre }}</h3>
+                        </div>
+                        <div class="p-1">
+                            <h5>Rate: {{ object.get_total_rate }}/5.0</h5>
+                        </div>
                     </div>
                 </div>
             </div>
