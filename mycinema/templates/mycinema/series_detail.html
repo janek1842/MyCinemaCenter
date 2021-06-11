@@ -9,8 +9,8 @@
                 <div class="col-xl-7 col-sm-4">
                      {% if object.author == user %}
                         <div class="d-flex flex-row">
-                            <div class="p-1"><a class=" btn btn-secondary btn-sm mt-1 mb-1 top-0 end-0" href="{% url 'film-update' object.id %}">Update</a></div>
-                            <div class="p-1"><a class=" btn btn-danger btn-sm mt-1 mb-1 top-0 end-0" href="{% url 'film-delete' object.id %}">Delete</a></div>
+                            <div class="p-1"><a class=" btn btn-secondary btn-sm mt-1 mb-1 top-0 end-0" href="{% url 'series-update' object.id %}">Update</a></div>
+                            <div class="p-1"><a class=" btn btn-danger btn-sm mt-1 mb-1 top-0 end-0" href="{% url 'series-delete' object.id %}">Delete</a></div>
                         </div>
                      {% endif %}
                     <div class="d-flex flex-column">
