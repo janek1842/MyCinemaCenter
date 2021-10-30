@@ -1,5 +1,5 @@
 
-# MyCinemaCenter - Django web application with informations about movies, series, film staffs etc.
+# MyCinemaCenter - Django web application with informations about movies, series, film staff etc.
 
 In this project I was responsible for:
 
