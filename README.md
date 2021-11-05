@@ -1,7 +1,19 @@
 
-# MyCinemaCenter - Django web application with informations about movies, series, film staff etc.
+# MyCinemaCenter
 
-In this project I was responsible for:
+## This is Django based Web app with informations about movies, series, cinemas, actors, TV directors. It's very similar to Filmweb popular website
+
+View some screenshots from this app in **Screenshots.zip** 
+
+### User is allowed to:
+
+- login,register and edit personal account 
+- add and edit objects(news,movies, series, cinemas, actors, directors)
+- comment and rate these objects
+- own personal subpage with subscribed objects
+- view some statistics and ranks of these objects
+
+### In this project I was responsible for:
 
 - Creating login/register system 
 - News subpage
@@ -9,5 +21,5 @@ In this project I was responsible for:
 - Subscription system 
 - CRUD 
 
-# Installation
+### Installation
 pip install -r requirements.txt
