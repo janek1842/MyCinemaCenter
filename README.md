@@ -1,7 +1,7 @@
 
 # MyCinemaCenter
 
-## This is Django based Web app with informations about movies, series, cinemas, actors, TV directors. It's very similar to Filmweb popular website
+## This is Django based Web app with informations about movies, series, cinemas, actors, TV directors. It's very similar to Filmweb
 
 View some screenshots from this app in **Screenshots.zip** 
 
